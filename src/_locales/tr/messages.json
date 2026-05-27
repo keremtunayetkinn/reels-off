@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Reels Off",
+    "description": "Eklentinin adı (mağaza ve tarayıcıda görünür)."
+  },
+  "extDescription": {
+    "message": "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz.",
+    "description": "Eklentinin kısa açıklaması (mağaza listingi)."
+  }
+}

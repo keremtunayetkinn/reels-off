@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Reels Off",
+    "description": "Extension name (visible in store and browser)."
+  },
+  "extDescription": {
+    "message": "Reduces distraction by hiding Reels and algorithmic content suggestions on Instagram's web interface. Collects no data.",
+    "description": "Short description of the extension (store listing)."
+  }
+}
