@@ -1,1 +1,64 @@
-/* Faz 2-4'te doldurulacak */
+/*
+ * Reels Off — block.css
+ * Faz 2: Content Script CSS Injection
+ *
+ * Strateji: href-first seçiciler. Instagram class isimleri obfuscated
+ * (x1qjc9v5, _aaa1 vb.) ve sık değişir; href routing kararlıdır.
+ *
+ * Tüm kurallar "her zaman aktif"tir. Kullanıcı açma/kapama toggle'ları
+ * Faz 5'te (popup + chrome.storage.local) eklenecektir.
+ *
+ * Kapsam (README ile tutarlı):
+ *   A1 — Sidebar Reels linki         [aktif]
+ *   A2 — Sidebar Keşfet linki        [aktif]
+ *   D1 — Profil Reels sekmesi        [aktif]
+ *   G1 — Feed tekil Reel gönderileri [aktif]
+ */
+
+/* ---------------------------------------------------------------------------
+ * A1 — Sol kenar çubuğu Reels linki
+ * Seçici mantığı: tam eşleme href="/reels/" yalnızca sidebar linkini yakalar.
+ *   Feed reel post'ları /reels/<id>/ formatında olduğundan hariç kalır.
+ * Güven: Yüksek (Faz 0)
+ * ------------------------------------------------------------------------- */
+a[href="/reels/"] {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * A2 — Sol kenar çubuğu Keşfet linki
+ * Seçici mantığı: tam eşleme href="/explore/" yalnızca sidebar linkini yakalar.
+ *   /explore/locations/, /explore/search/ gibi alt yollar hariç kalır.
+ * Güven: Yüksek (Faz 0); Instagram redesign sürecinde olduğu için
+ *   görsel test sırasında canlı doğrulama yapılacak.
+ * ------------------------------------------------------------------------- */
+a[href="/explore/"] {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * D1 — Profil sayfası Reels sekmesi
+ * Seçici mantığı: main içinde /<username>/reels/ ile biten link;
+ *   tam /reels/ (sidebar) hariç tutulur.
+ * Not: Profil tab'ları role="link" + aria-selected hibrit yapı kullanır
+ *   (role="tab" DEĞİL), bu yüzden href suffix ile hedefleniyor.
+ * Güven: Yüksek (Faz 0)
+ * ------------------------------------------------------------------------- */
+main a[href$="/reels/"]:not([href="/reels/"]) {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+ * G1 — Feed'e gömülü tekil Reel gönderileri
+ * DURUM: 2026-05-28 tarihli tarayıcı-ajan oturumunda doğrulandı.
+ *   Post-seviyesi container <article> (ata zinciri Level 4); aggregate
+ *   test 5/14 article reel içeriyor. Bölüm 6 aday seçicisine
+ *   :not([href^="/reels/audio/"]) eklendi: IG bazı foto post'larda şarkı
+ *   atfı için /reels/audio/<id>/ linki kullanır; bu filter o foto post'ların
+ *   yanlışlıkla gizlenmesini önler (Bölüm 8.3 sapma raporu kullanıcı onaylı).
+ * Performans notu: :has() anchor'ı (article) dar; uyarı yok.
+ * Güven: Yüksek (canlı doğrulandı)
+ * ------------------------------------------------------------------------- */
+article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+  display: none !important;
+}

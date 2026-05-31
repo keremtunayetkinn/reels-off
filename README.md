@@ -5,9 +5,11 @@
 ## Ne yapar
 
 - Sol kenar çubuğundaki Reels bağlantısını gizler
+- Sol kenar çubuğundaki Keşfet bağlantısını gizler
 - Profil sayfasındaki Reels sekmesini gizler
 - Ana akışa gömülü tekil Reels gönderilerini gizler
 - `/reels/` ve `/reels/<id>/` URL'lerine erişimi engelleyip ana sayfaya yönlendirir
+- `/explore/` URL'lerine erişimi engelleyip ana sayfaya yönlendirir
 - Tüm ayarlar yerel olarak saklanır; hiçbir veri sunucuya gönderilmez
 
 ## Ne yapmaz
