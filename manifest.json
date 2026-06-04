@@ -16,6 +16,10 @@
     "https://www.instagram.com/*"
   ],
 
+  "permissions": [
+    "storage"
+  ],
+
   "content_scripts": [
     {
       "matches": ["https://www.instagram.com/*"],

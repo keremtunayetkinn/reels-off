@@ -1,1 +1,83 @@
-/* Faz 5'te doldurulacak */
+/*
+ * Reels Off — popup.css
+ * Faz 4: Popup stil dosyası
+ *
+ * Tasarım: Sade, koyu tema (Instagram'a tematik uyum).
+ * Bağımlılık: Yok — system font fallback chain.
+ * Erişilebilirlik: native checkbox kullanılır; klavye + screen reader uyumlu.
+ */
+
+:root {
+  --bg: #1c1c1e;
+  --fg: #ffffff;
+  --muted: #8e8e93;
+  --border: #2c2c2e;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  min-width: 320px;
+  max-width: 360px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+header h1 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+section {
+  margin-bottom: 16px;
+}
+
+section:last-of-type {
+  margin-bottom: 0;
+}
+
+section h2 {
+  margin: 0 0 8px 0;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+.toggle:last-child {
+  border-bottom: none;
+}
+
+.toggle input[type="checkbox"] {
+  margin: 0 12px 0 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggle span {
+  flex: 1;
+}

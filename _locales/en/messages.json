@@ -6,5 +6,49 @@
   "extDescription": {
     "message": "Reduces distraction by hiding Reels and algorithmic content suggestions on Instagram's web interface. Collects no data.",
     "description": "Short description of the extension (store listing)."
+  },
+  "popupTitle": {
+    "message": "Reels Off Settings",
+    "description": "Popup title."
+  },
+  "popupSubtitle": {
+    "message": "Your preferences are stored only on your device.",
+    "description": "Popup subtitle — privacy emphasis."
+  },
+  "categoryHide": {
+    "message": "Hide",
+    "description": "CSS hide group header."
+  },
+  "categoryRedirect": {
+    "message": "Redirect",
+    "description": "URL redirect group header."
+  },
+  "toggleSidebarReels": {
+    "message": "Hide sidebar Reels link",
+    "description": "A1 toggle label."
+  },
+  "toggleSidebarExplore": {
+    "message": "Hide sidebar Explore link",
+    "description": "A2 toggle label."
+  },
+  "toggleProfileReelsTab": {
+    "message": "Hide profile Reels tab",
+    "description": "D1 toggle label."
+  },
+  "toggleFeedReelPosts": {
+    "message": "Hide Reel posts in main feed",
+    "description": "G1 toggle label."
+  },
+  "toggleRedirectReels": {
+    "message": "Redirect /reels/ URLs to homepage",
+    "description": "F1a/F1b toggle label."
+  },
+  "toggleRedirectExplore": {
+    "message": "Redirect /explore/ URLs to homepage",
+    "description": "E1 toggle label."
+  },
+  "toggleRedirectProfileReels": {
+    "message": "Redirect profile Reels URLs back to profile",
+    "description": "F1c toggle label."
   }
 }

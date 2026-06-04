@@ -1,18 +1,25 @@
 /*
  * Reels Off — block.css
- * Faz 2: Content Script CSS Injection
+ * Faz 2 + Faz 4: Content Script CSS Injection + Settings-aware overrides
  *
  * Strateji: href-first seçiciler. Instagram class isimleri obfuscated
  * (x1qjc9v5, _aaa1 vb.) ve sık değişir; href routing kararlıdır.
  *
- * Tüm kurallar "her zaman aktif"tir. Kullanıcı açma/kapama toggle'ları
- * Faz 5'te (popup + chrome.storage.local) eklenecektir.
+ * Davranış: Her kural default'ta aktif (display: none !important).
+ *   Kullanıcı popup'tan bir özelliği kapatırsa, redirect.js
+ *   <html> elementine ilgili "ro-disable-*" class'ını ekler ve
+ *   override kuralı (display: revert !important) devreye girer.
  *
- * Kapsam (README ile tutarlı):
- *   A1 — Sidebar Reels linki         [aktif]
- *   A2 — Sidebar Keşfet linki        [aktif]
- *   D1 — Profil Reels sekmesi        [aktif]
- *   G1 — Feed tekil Reel gönderileri [aktif]
+ * Flicker analizi: Default = engelleme. Storage cold-read sırasında
+ *   (ilk ~5-10ms) class'lar henüz uygulanmamış olabilir → engelleme aktif.
+ *   Kullanıcı off ettiyse storage gelince class eklenir, override çalışır.
+ *   Yani worst case = "kapatılmış bir özellik kısa süre aktif" — kabul edilebilir.
+ *
+ * Kapsam (Faz 2 ile aynı, README ile tutarlı):
+ *   A1 — Sidebar Reels linki         [varsayılan aktif, blockSidebarReels]
+ *   A2 — Sidebar Keşfet linki        [varsayılan aktif, blockSidebarExplore]
+ *   D1 — Profil Reels sekmesi        [varsayılan aktif, blockProfileReelsTab]
+ *   G1 — Feed tekil Reel gönderileri [varsayılan aktif, blockFeedReelPosts]
  */
 
 /* ---------------------------------------------------------------------------
@@ -24,16 +31,21 @@
 a[href="/reels/"] {
   display: none !important;
 }
+html.ro-disable-sidebar-reels a[href="/reels/"] {
+  display: revert !important;
+}
 
 /* ---------------------------------------------------------------------------
  * A2 — Sol kenar çubuğu Keşfet linki
  * Seçici mantığı: tam eşleme href="/explore/" yalnızca sidebar linkini yakalar.
  *   /explore/locations/, /explore/search/ gibi alt yollar hariç kalır.
- * Güven: Yüksek (Faz 0); Instagram redesign sürecinde olduğu için
- *   görsel test sırasında canlı doğrulama yapılacak.
+ * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
 a[href="/explore/"] {
   display: none !important;
+}
+html.ro-disable-sidebar-explore a[href="/explore/"] {
+  display: revert !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -47,18 +59,21 @@ a[href="/explore/"] {
 main a[href$="/reels/"]:not([href="/reels/"]) {
   display: none !important;
 }
+html.ro-disable-profile-reels-tab main a[href$="/reels/"]:not([href="/reels/"]) {
+  display: revert !important;
+}
 
 /* ---------------------------------------------------------------------------
  * G1 — Feed'e gömülü tekil Reel gönderileri
  * DURUM: 2026-05-28 tarihli tarayıcı-ajan oturumunda doğrulandı.
- *   Post-seviyesi container <article> (ata zinciri Level 4); aggregate
- *   test 5/14 article reel içeriyor. Bölüm 6 aday seçicisine
- *   :not([href^="/reels/audio/"]) eklendi: IG bazı foto post'larda şarkı
- *   atfı için /reels/audio/<id>/ linki kullanır; bu filter o foto post'ların
- *   yanlışlıkla gizlenmesini önler (Bölüm 8.3 sapma raporu kullanıcı onaylı).
+ *   Post-seviyesi container <article>; audio-link filter foto post'ları
+ *   yanlışlıkla gizlemeyi önler (Faz 2 Sapma 2 — KORUNUR).
  * Performans notu: :has() anchor'ı (article) dar; uyarı yok.
  * Güven: Yüksek (canlı doğrulandı)
  * ------------------------------------------------------------------------- */
 article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
   display: none !important;
+}
+html.ro-disable-feed-reel-posts article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+  display: revert !important;
 }

@@ -50,7 +50,7 @@ Hiçbir kullanıcı verisi toplanmaz. Detay için [PRIVACY-TR.md](./PRIVACY-TR.m
 
 ## Geliştirme aşamaları
 
-Bu proje fazlar halinde geliştirilmektedir. Mevcut durum: **Faz 3 (URL yönlendirme)**.
+Bu proje fazlar halinde geliştirilmektedir. Mevcut durum: **Faz 4 (Kullanıcı kontrolü ve ayarlar)**.
 
 ## Geri bildirim
 

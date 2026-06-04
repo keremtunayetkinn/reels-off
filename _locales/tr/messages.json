@@ -6,5 +6,49 @@
   "extDescription": {
     "message": "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz.",
     "description": "Eklentinin kısa açıklaması (mağaza listingi)."
+  },
+  "popupTitle": {
+    "message": "Reels Off Ayarları",
+    "description": "Popup başlığı."
+  },
+  "popupSubtitle": {
+    "message": "Tercihleriniz yalnızca cihazınızda saklanır.",
+    "description": "Popup alt başlığı — gizlilik vurgusu."
+  },
+  "categoryHide": {
+    "message": "Gizleme",
+    "description": "CSS ile gizleme grubu başlığı."
+  },
+  "categoryRedirect": {
+    "message": "Yönlendirme",
+    "description": "URL yönlendirme grubu başlığı."
+  },
+  "toggleSidebarReels": {
+    "message": "Sidebar Reels bağlantısını gizle",
+    "description": "A1 toggle etiketi."
+  },
+  "toggleSidebarExplore": {
+    "message": "Sidebar Keşfet bağlantısını gizle",
+    "description": "A2 toggle etiketi."
+  },
+  "toggleProfileReelsTab": {
+    "message": "Profil Reels sekmesini gizle",
+    "description": "D1 toggle etiketi."
+  },
+  "toggleFeedReelPosts": {
+    "message": "Ana akıştaki Reels gönderilerini gizle",
+    "description": "G1 toggle etiketi."
+  },
+  "toggleRedirectReels": {
+    "message": "/reels/ adreslerinde ana sayfaya yönlendir",
+    "description": "F1a/F1b toggle etiketi."
+  },
+  "toggleRedirectExplore": {
+    "message": "/explore/ adreslerinde ana sayfaya yönlendir",
+    "description": "E1 toggle etiketi."
+  },
+  "toggleRedirectProfileReels": {
+    "message": "Profil Reels adreslerinde profile geri dön",
+    "description": "F1c toggle etiketi."
   }
 }
