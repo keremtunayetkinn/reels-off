@@ -6,7 +6,12 @@
 >
 > **Faz numarası notu:** İçerik orijinal planda "Faz 5" olarak tanımlanmıştı (Popup + Toggle + Storage). PHASE4_GUIDE.md kapsam aynı kalacak şekilde **Faz 4** olarak yeniden numaralandırdı. Bu raporda da "Faz 4" geçer; eski belgelerde (PHASE3_HANDOFF.md) "Faz 5" referansı görürse bu kapsam değişikliğinden kaynaklanır, içerik kaymaz.
 >
-> **Son güncelleme (2026-06-04, commit + push sonrası):** Bu rapor ilk olarak Faz 4 commit'i ATILMADAN ÖNCE yazıldı (PHASE3 pattern'i ile farklılık olarak). Aynı gün içinde commit + push tamamlandıktan sonra rapor güncellendi: Bölüm 3 (repo durumu, commit zinciri), Bölüm 5 (KN4), Bölüm 8 (akış diyagramı), Bölüm 10 (commit/push şartları), Bölüm 11.5 (git diff komutu), Bölüm 11.6, Bölüm 12 (intro), Bölüm 13 (`1065df4` satırı), Bölüm 14 (son paragraf) post-commit gerçek state'i yansıtır. Bu güncellemeden sonra rapor `e5995a0` commit'inden sonraki ek commit ile (veya inline değişiklik olarak) gelmiştir; yeni ajan `git log --oneline -- PHASE4_HANDOFF.md` ile güncelleme tarihçesini görebilir.
+> **Son güncellemeler (2026-06-04):** Bu rapor üç aşamada güncellendi:
+> 1. **İlk yazım** (Faz 4 commit'i ATILMADAN ÖNCE — PHASE3 pattern'inden farklılık olarak).
+> 2. **Post-commit güncellemesi** (`61218bb`): commit + push tamamlandıktan sonra stale state referansları (Bölüm 3, 5, 8, 10, 11.5, 11.6, 12, 13, 14) güncel hash'lerle (`20bca82` + `e5995a0`) tazelendi.
+> 3. **1065df4 post-mortem düzeltmesi:** Kullanıcı Faz 5 öncesi sorgusunda `1065df4`'ün içeriği `git show --stat` ile incelendi ve **commit mesajının yanıltıcı olduğu** keşfedildi (refactor değil, doc-only). Bu keşif sonrası Bölüm 2 (kullanıcı bağlamı), Bölüm 3 (commit tablosu açıklaması), Bölüm 4 (PHASE4_GUIDE.md repo'da değil iddiası — YANLIŞTI), Bölüm 5 (KN1), Bölüm 14 (son paragraf 4. madde) düzeltildi.
+>
+> Yeni ajan `git log --oneline -- PHASE4_HANDOFF.md` ile güncelleme tarihçesini görebilir.
 
 ---
 
@@ -75,7 +80,8 @@
 
 Faz 3 handoff'unda dökülen kullanıcı bağlamı (Türkçe iletişim, dört kontrol noktalı disiplin, sapma şeffaflığı, geri-alınması zor aksiyondan önce açık onay) Faz 4'te **birebir** korundu. Faz 4'e özel gözlemler:
 
-- **Kullanıcı tutarsızlık raporlama disiplini koruyor.** Faz 4 başlangıcında HEAD `9a34bd5` beklenirken `1065df4` ("Refactor code structure for improved readability and maintainability") bulundu; ajan **DUR-bildir-onay** akışını uyguladı, kullanıcı "Devam et" seçeneğini işaretledi. Refactor commit'i Faz 4 zemininden inceleme sonrası kritik dosyalarda davranışsal sapma içermediği için Faz 4 implementasyonuna engel teşkil etmedi.
+- **Kullanıcı tutarsızlık raporlama disiplini koruyor.** Faz 4 başlangıcında HEAD `9a34bd5` beklenirken `1065df4` ("Refactor code structure for improved readability and maintainability") bulundu; ajan **DUR-bildir-onay** akışını uyguladı, kullanıcı "Devam et" seçeneğini işaretledi. *Faz 4 sonrası post-mortem'de keşfedildi:* `1065df4` aslında refactor değil, **doc-only commit** (PHASE3_HANDOFF.md + PHASE4_GUIDE.md ekledi; commit mesajı içeriği yansıtmıyor). İlk inceleme "kritik dosyalarda davranışsal sapma yok" sonucuna varmıştı — bu doğruydu ama gerçek sebep "küçük refactor" değil, **"hiçbir kod dosyasına dokunmamış olması"**. Detay Bölüm 3.
+- **Süreç dersi:** Ajan `1065df4` için "Önce 1065df4 farkını inceleyelim" seçeneği sunmuştu (3 seçenekten biri); kullanıcı doğrudan "Devam et"i seçti, ajan da `git show --stat 1065df4` çalıştırmadan ilerledi. Sonradan keşfedilen yanıltıcı commit mesajı bu kararı **etkilemese de** — kod dosyaları hâlâ intact — referans olarak Faz 5'te yeni bir bilinmeyen commit'le karşılaşılırsa kullanıcı "devam"ı seçse bile içeriği `git show --stat` ile 2-saniye'lik bir teyit etmek faydalı. Yanıltıcı commit mesajları için savunma.
 - **Kullanıcı non-technical test rehberi talep etti.** Görsel test checklist'i (Bölüm 9) AI tarafından "yazılım alanında donanımlı olmayan birisinin anlayabileceği" şekilde adım adım yeniden yazıldı. Bu sade format kullanıcı tarafından örtük onaylandı (testler bu rehberle yapıldı).
 - **Kullanıcı bağımsız doğrulama disiplinini korudu.** G1 over-match keşfi sonrası ajan A/B test önerdi (sadece `blockFeedReelPosts` toggle'ı OFF, sayfa yenileme yok); kullanıcı testi yaptı, **Senaryo A** doğrulandı (semptom G1 kaynaklı). Bu, geri-alınması zor "fix uygula" aksiyonundan önce delil toplama disiplininin sürdürüldüğünü gösteriyor.
 - **Kullanıcı kapsam disiplinini sıkı tuttu.** G1 fix Faz 2 alanına dokunan bir düzeltme; kullanıcı bunu Faz 4'e dahil etmedi, Faz 5'e bıraktı. Ajana güvenlik analizini istedi (uygulama değil). Bu, "kapsam kayması olmasın" prensibinin önceliklendiğini gösteriyor.
@@ -111,7 +117,7 @@ Toplam commit (HEAD'de): 13
 | `6c2b06c` | Add Phase 2 Handoff Report for AI Agent Transition | `PHASE2_HANDOFF.md` |
 | `2115b3d` | Add Phase 3 Implementation Guide for URL Redirects | `PHASE3_GUIDE.md` |
 | `9a34bd5` | Phase 3: URL redirect for Reels and Explore paths (polling-based) | `redirect.js` (+69, -1), `README.md` (+1, -1) |
-| `1065df4` | Refactor code structure for improved readability and maintainability | Faz 3-Faz 4 arası kullanıcı tarafından atılmış refactor commit. Faz 4 zemini olarak kabul edildi (kritik dosyalarda davranışsal sapma yok). Faz 4 push'u ile birlikte origin/main'e gitti. |
+| `1065df4` | Refactor code structure for improved readability and maintainability | **Commit mesajı yanıltıcı.** Aslen doc-only commit: `PHASE3_HANDOFF.md` (+472) ve `PHASE4_GUIDE.md` (+1087) eklendi, hiçbir kod dosyasına dokunulmadı (`git diff 9a34bd5 1065df4 -- manifest.json src/ _locales/ README.md` boş). Faz 4 zemini Faz 3 sonu state'i ile birebir aynı kaldı. Pattern sapması: PHASE1/2 handoff'ları ayrı commit'lerdi (`67097a0`, `6c2b06c`); PHASE3 handoff'u PHASE4 guide'ı ile aynı commit'e paketlendi. Faz 4 push'u ile birlikte origin/main'e gitti. |
 | `20bca82` | **Phase 4: Popup UI with toggles and chrome.storage.local integration** | `manifest.json`, `_locales/tr+en`, `block.css`, `redirect.js`, `popup.html+css+js`, `README.md` (9 dosya, +359, -41) |
 | `e5995a0` | **Add Phase 4 Handoff Report for AI Agent Transition** | `PHASE4_HANDOFF.md` (+607 başlangıç; bu güncellemeden sonra +X farklı olabilir — `git log -- PHASE4_HANDOFF.md` ile teyit) |
 
@@ -135,11 +141,11 @@ Toplam commit (HEAD'de): 13
 | `src/popup/popup.js` | Placeholder → tam JS | IIFE + `'use strict'`, DEFAULTS objesi (redirect.js ile **birebir aynı** — Kural 18), i18n replacement (`data-i18n` → `chrome.i18n.getMessage()`), toggle wiring (`data-key` → `chrome.storage.local.get/set`). Mesajlaşma API'si yok. |
 | `README.md` | Tek satır | "Mevcut durum: **Faz 3 (URL yönlendirme)**." → "Mevcut durum: **Faz 4 (Kullanıcı kontrolü ve ayarlar)**." (satır 53). "Ne yapar" listesi ve diğer içerikler dokunulmadı. |
 
-### Faz 4'te DOKUNULMAYAN dosyalar (Faz 1-3'ten aynen kalır)
+### Faz 4'te DOKUNULMAYAN dosyalar (Faz 4 implementation commit'i `20bca82` bunlara dokunmadı)
 
 `LICENSE`, `PRIVACY-TR.md`, `PRIVACY-EN.md`, `.gitignore`, `.eslintrc.json`, `.prettierrc.json`, `src/icons/*` (4 PNG placeholder), `docs/.gitkeep`, `PHASE1_GUIDE.md`, `PHASE1_HANDOFF.md`, `PHASE2_GUIDE.md`, `PHASE2_HANDOFF.md`, `PHASE3_GUIDE.md`, `PHASE3_HANDOFF.md`, `PHASE4_GUIDE.md`.
 
-> **Not:** `PHASE4_GUIDE.md` repo içinde değil, `c:\Users\User\Downloads\PHASE4_GUIDE.md` lokasyonunda. Eğer kullanıcı sonradan kılavuzu repo'ya kopyalarsa bu Faz 4 envanteri DIŞIDIR; ayrı commit konusu.
+> **Not:** `PHASE3_HANDOFF.md` (472 satır) ve `PHASE4_GUIDE.md` (1087 satır) repo'da **mevcut** — her ikisi de `1065df4` ile geldi (Bölüm 3 commit tablosu). Faz 4 implementation commit'i (`20bca82`) bu iki dosyaya dokunmadı; yani "Faz 4'te dokunulmayan" listesine dahil olmaları doğru ama "Faz 1-3'ten aynen kalır" demek yanıltıcı olurdu — `1065df4`'le geldi, Faz 3'ten beri orada değildi. Ayrıca `c:\Users\User\Downloads\PHASE4_GUIDE.md` lokasyonunda kullanıcının çalışma kopyası bulunabilir (Faz 4 boyunca ajan o kopyadan okudu). İki kopyanın eşitliği teyit edilmedi; gerekirse `diff "c:\Users\User\Downloads\PHASE4_GUIDE.md" PHASE4_GUIDE.md` ile kontrol edilebilir. **Önceki versiyonda bu rapor "PHASE4_GUIDE.md repo içinde değil" diyordu — bu YANLIŞTI ve düzeltildi.**
 
 ---
 
@@ -149,7 +155,7 @@ Faz 1-3'teki kararlar değişmedi. Faz 4'te alınan yeni kararlar:
 
 | Kontrol Noktası / An | Karar | Bağlam |
 |---|---|---|
-| KN1 — Devralınan state doğrulama | "Devam et (Faz 4 görevleri)" | HEAD `1065df4` (beklenen `9a34bd5` değil) ve push-edilmemiş durum bildirildi; kullanıcı kritik dosyaların intact olduğunu görünce devam etmeyi seçti. |
+| KN1 — Devralınan state doğrulama | "Devam et (Faz 4 görevleri)" | HEAD `1065df4` (beklenen `9a34bd5` değil) ve push-edilmemiş durum bildirildi; kullanıcı kritik dosyaların intact olduğunu görünce devam etmeyi seçti. *Post-mortem notu (Bölüm 3):* `1065df4` aslında refactor değil doc-only commit'mişti; ajan o sırada `git show --stat 1065df4` çalıştırmadı, commit mesajına güvendi. Karar etkilenmedi (kod dosyaları intact) ama Faz 5'te benzer durumlarda commit içeriği teyit edilmeli. |
 | Görsel test rehberi | "Non-technical formatta yaz" | Kılavuzun Bölüm 9 checklist'i sade dile çevrildi; kullanıcı bu rehberle test etti. |
 | KN3 — Görsel test sonucu | "1, 2, 3, 4, 6 ✓; Bölüm 5'te regresyon var" | Ana sayfa derin kaydırmada post'lar kayboluyor, siyah arka plan, kaydırma çubuğu titriyor. |
 | A/B test (G1 izolasyon) | "Senaryo A doğrulandı" | `blockFeedReelPosts` OFF → semptom kayboldu → kesin tanı: G1 over-match. |
@@ -609,7 +615,7 @@ Faz 4 dört özellik gösterdi:
 1. **Sıfır kılavuz sapması, yüksek kapsamla.** 9 dosya değişikliği, popup ekosistemi sıfırdan, storage entegrasyonu — yine de PHASE4_GUIDE.md şablonları byte-for-byte uygulandı. Kontrol noktası disiplini bu kapsamla orantılı şekilde sürdürüldü.
 2. **Bağımsız doğrulama disiplini bir regresyon yakalamada işe yaradı.** G1 over-match Faz 2'den beri vardı ama Faz 4 derin scroll testleri sayesinde ilk kez raporlandı. A/B test deseni hipotezi 1 cycle'da izole etti. Bu pattern Faz 5+ için referans.
 3. **Kapsam disiplini fix ertelenmesinde gözlendi.** Keşfedilen regresyona "hemen düzelt" demek yerine kullanıcı "güvenlik analizini yap, Faz 5'e bırak" dedi. AI ajan bu kararı kayıt altına aldı, fix önerisini detaylı dokumante etti, Faz 5 ajan için "hazır iş" haline getirdi.
-4. **Tutarsızlık raporlama disiplini korundu.** Faz 4 başlangıcında beklenen HEAD'in (`9a34bd5`) yerine `1065df4` (lokal refactor) bulundu; ajan **DUR-bildir-onay** akışını uyguladı. Bu disiplin Faz 5'te de aynen sürdürülmeli.
+4. **Tutarsızlık raporlama disiplini korundu — ama kusurlu uygulandı.** Faz 4 başlangıcında beklenen HEAD'in (`9a34bd5`) yerine `1065df4` ("Refactor code structure...") bulundu; ajan **DUR-bildir-onay** akışını uyguladı. Ancak `git show --stat 1065df4` çalıştırılmadı — sadece kritik kod dosyalarının (manifest, redirect.js, block.css) intact olduğu teyit edildi ve "refactor" varsayımıyla devam edildi. Faz 4 sonrası kullanıcı sorgusunda `1065df4`'ün **aslında refactor değil, doc-only commit** olduğu keşfedildi (PHASE3_HANDOFF.md + PHASE4_GUIDE.md ekliyordu). Karar etkilenmedi çünkü zaten hiçbir kod dosyasına dokunmamıştı, ama **commit mesajı içeriği yansıtmıyordu**. **Faz 5 dersi:** Beklenmedik commit'lerle karşılaşırsan `git show --stat <hash>` ile dosya envanterini önce gör; commit mesajına güvenme. 2 saniyelik bir adım.
 
 Bu projenin disiplini (Faz 2-3 handoff'larının vurguladığı gibi): **"İyileştirici değil uygulayıcı ol. Belirsizlikte sor. Sapma yaparsan şeffaf raporla. Kapsam dışına çıkma."** Faz 4 bu disipline sıkı tutundu; Faz 5+ ajanı aynı disiplini sürdürmeli.
 
