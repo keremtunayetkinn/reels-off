@@ -8,44 +8,44 @@
 
 ## 1. Proje Kimliği (Faz 3 sonu güncel hali)
 
-| Alan | Değer |
-|---|---|
-| Proje adı | **Reels Off** (TR ve EN aynı) |
-| Tür | Chrome + Firefox MV3 tarayıcı eklentisi |
+| Alan              | Değer                                                                                                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proje adı         | **Reels Off** (TR ve EN aynı)                                                                                                                                                                                                   |
+| Tür               | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                                                                                                                         |
 | Tek amaç (güncel) | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek kullanıcının dikkat dağıtıcı içeriklere maruz kalmasını azaltır." Faz 3, Faz 2'de README'ye verilen `/explore/` URL redirect sözünü yerine getirdi. |
-| Sahibi | Kerem Tuna |
-| Telif yılı | 2026 |
-| Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO) |
-| Diller | Türkçe (varsayılan), İngilizce (fallback) |
-| Mevcut faz | **Faz 3 tamamlandı + push edildi**; sıradaki Faz 4 (kılavuz henüz yok) veya doğrudan Faz 5 (Popup + Toggle + Storage) — kullanıcı kararı |
+| Sahibi            | Kerem Tuna                                                                                                                                                                                           |
+| Telif yılı        | 2026                                                                                                                                                                                                                            |
+| Hedef mağazalar   | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                                                                                                                        |
+| Diller            | Türkçe (varsayılan), İngilizce (fallback)                                                                                                                                                                                       |
+| Mevcut faz        | **Faz 3 tamamlandı + push edildi**; sıradaki Faz 4 (kılavuz henüz yok) veya doğrudan Faz 5 (Popup + Toggle + Storage) — kullanıcı kararı                                                                                        |
 
 ### Teknik kararlar (Faz 1-2'den miras, Faz 3'te değişmedi)
 
-| Karar | Sebep |
-|---|---|
-| Vanilla JavaScript | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi |
-| Bundler / minify yok | Web Store reviewer kaynak kodu okur |
-| CSS-first engelleme | Class isimleri yerine href-first seçici (Faz 2) |
-| `chrome.storage.local` (sync DEĞİL) | Google sunucularına veri gitmez (Faz 5'te kullanılacak) |
-| CSP sıkı | `script-src 'self'; object-src 'none'; base-uri 'none';` |
-| `host_permissions` tek entry | Sadece `https://www.instagram.com/*` |
-| `permissions` boş | **Faz 3 yeni izin gerektirmedi** (kasıtlı — `webNavigation` reddedildi) |
-| Build adımı yok | Klasör doğrudan yüklenebilir |
-| Telemetri / analitik | **Hiç** |
+| Karar                               | Sebep                                                                   |
+| ----------------------------------- | ----------------------------------------------------------------------- |
+| Vanilla JavaScript                  | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi                       |
+| Bundler / minify yok                | Web Store reviewer kaynak kodu okur                                     |
+| CSS-first engelleme                 | Class isimleri yerine href-first seçici (Faz 2)                         |
+| `chrome.storage.local` (sync DEĞİL) | Google sunucularına veri gitmez (Faz 5'te kullanılacak)                 |
+| CSP sıkı                            | `script-src 'self'; object-src 'none'; base-uri 'none';`                |
+| `host_permissions` tek entry        | Sadece `https://www.instagram.com/*`                                    |
+| `permissions` boş                   | **Faz 3 yeni izin gerektirmedi** (kasıtlı — `webNavigation` reddedildi) |
+| Build adımı yok                     | Klasör doğrudan yüklenebilir                                            |
+| Telemetri / analitik                | **Hiç**                                                                 |
 
 ### Faz 3'e özel mimari kararlar (PHASE3_GUIDE.md Bölüm 3'ten birebir uygulandı)
 
-| Karar | Gerekçe |
-|---|---|
-| **Polling (`setInterval`) ile URL takibi** | `history.pushState` izole world'den patch'lenemez. `chrome.webNavigation` ekstra izin gerektirir → Web Store reviewer için kırmızı bayrak. Polling en sade ve izinsiz çözüm. |
-| **`location.replace()` (kesinlikle `location.href = ...` DEĞİL)** | Geri tuşu Reels'e dönmesin. History stack'e eklenmez. |
-| **`POLL_INTERVAL_MS = 300`** | 250-500ms sweet spot. Reels otomatik play (~500ms) başlamadan önce yakalanır; CPU yükü ihmal edilebilir. |
-| **`PAUSE_AFTER_REDIRECT_MS = 1000`** | Loop guard. `location.replace` çağrısı sonrası navigation tamamlanana kadar polling kapalı; double-redirect önlenir. |
-| **IIFE + `'use strict'`** | İzole world zaten korur; ek savunma olarak global scope kirliliği önlenir. |
-| **Regex tabanlı URL eşleşmesi (3 desen)** | `REELS_RE`, `EXPLORE_RE`, `PROFILE_REELS_RE`. Trailing slash varyasyonları ve alt yollar tek desenle yakalanır. Sıralama kasıtlı (F1a/b → E1 → F1c). |
-| **`run_at: "document_start"` + initial `tick()`** | Manifest zaten ayarlı. Initial tick doğrudan navigation'ı (bookmark/share link) IG render başlamadan yakalar → flicker yok. |
-| **MutationObserver YOK, `chrome.webNavigation` YOK** | URL değişikliği DOM olayı değil. Ekstra izin ekleme yasak. Polling yeterli ve doğrulanmış. |
-| **Toggle entegrasyonu YOK (her zaman aktif)** | Faz 5 işi. `chrome.storage` Faz 3'te yok. |
+| Karar                                                             | Gerekçe                                                                                                                                                                      |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Polling (`setInterval`) ile URL takibi**                        | `history.pushState` izole world'den patch'lenemez. `chrome.webNavigation` ekstra izin gerektirir → Web Store reviewer için kırmızı bayrak. Polling en sade ve izinsiz çözüm. |
+| **`location.replace()` (kesinlikle `location.href = ...` DEĞİL)** | Geri tuşu Reels'e dönmesin. History stack'e eklenmez.                                                                                                                        |
+| **`POLL_INTERVAL_MS = 300`**                                      | 250-500ms sweet spot. Reels otomatik play (~500ms) başlamadan önce yakalanır; CPU yükü ihmal edilebilir.                                                                     |
+| **`PAUSE_AFTER_REDIRECT_MS = 1000`**                              | Loop guard. `location.replace` çağrısı sonrası navigation tamamlanana kadar polling kapalı; double-redirect önlenir.                                                         |
+| **IIFE + `'use strict'`**                                         | İzole world zaten korur; ek savunma olarak global scope kirliliği önlenir.                                                                                                   |
+| **Regex tabanlı URL eşleşmesi (3 desen)**                         | `REELS_RE`, `EXPLORE_RE`, `PROFILE_REELS_RE`. Trailing slash varyasyonları ve alt yollar tek desenle yakalanır. Sıralama kasıtlı (F1a/b → E1 → F1c).                         |
+| **`run_at: "document_start"` + initial `tick()`**                 | Manifest zaten ayarlı. Initial tick doğrudan navigation'ı (bookmark/share link) IG render başlamadan yakalar → flicker yok.                                                  |
+| **MutationObserver YOK, `chrome.webNavigation` YOK**              | URL değişikliği DOM olayı değil. Ekstra izin ekleme yasak. Polling yeterli ve doğrulanmış.                                                                                   |
+| **Toggle entegrasyonu YOK (her zaman aktif)**                     | Faz 5 işi. `chrome.storage` Faz 3'te yok.                                                                                                                                    |
 
 ---
 
@@ -85,22 +85,23 @@ Toplam commit: 10
 
 ### Commit zinciri (eski → yeni)
 
-| Hash | Mesaj | Kapsam |
-|---|---|---|
-| `a63ed55` | Initial scaffold: Phase 1 (project skeleton + manifest + legal docs) | Faz 1 ilk scaffold |
-| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load (to be replaced in Phase 10) | 4 PNG placeholder |
-| `8c95378` | Move _locales to extension root (Chrome MV3 requires hard-coded path) | `_locales/` rename |
-| `67097a0` | Add Phase 1 Handoff Report for AI Agent Transition | `PHASE1_HANDOFF.md` |
-| `0002e6a` | Add initial project structure and configuration files for Phase 1 | Faz 1 iskelet |
-| `638a623` | Add Phase 2 Implementation Guide for CSS Injection and Reels Blocking | `PHASE2_GUIDE.md` |
-| `ea51773` | Phase 2: CSS injection for Reels/Explore blocking (A1, A2, D1, G1) | `block.css` + README |
-| `6c2b06c` | Add Phase 2 Handoff Report for AI Agent Transition | `PHASE2_HANDOFF.md` |
-| `2115b3d` | Add Phase 3 Implementation Guide for URL Redirects | `PHASE3_GUIDE.md` |
-| `9a34bd5` | **Phase 3: URL redirect for Reels and Explore paths (polling-based)** | `redirect.js` (+69, -1), `README.md` (+1, -1) |
+| Hash      | Mesaj                                                                          | Kapsam                                        |
+| --------- | ------------------------------------------------------------------------------ | --------------------------------------------- |
+| `a63ed55` | Initial scaffold: Phase 1 (project skeleton + manifest + legal docs)           | Faz 1 ilk scaffold                            |
+| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load (to be replaced in Phase 10) | 4 PNG placeholder                             |
+| `8c95378` | Move \_locales to extension root (Chrome MV3 requires hard-coded path)         | `_locales/` rename                            |
+| `67097a0` | Add Phase 1 Handoff Report for AI Agent Transition                             | `PHASE1_HANDOFF.md`                           |
+| `0002e6a` | Add initial project structure and configuration files for Phase 1              | Faz 1 iskelet                                 |
+| `638a623` | Add Phase 2 Implementation Guide for CSS Injection and Reels Blocking          | `PHASE2_GUIDE.md`                             |
+| `ea51773` | Phase 2: CSS injection for Reels/Explore blocking (A1, A2, D1, G1)             | `block.css` + README                          |
+| `6c2b06c` | Add Phase 2 Handoff Report for AI Agent Transition                             | `PHASE2_HANDOFF.md`                           |
+| `2115b3d` | Add Phase 3 Implementation Guide for URL Redirects                             | `PHASE3_GUIDE.md`                             |
+| `9a34bd5` | **Phase 3: URL redirect for Reels and Explore paths (polling-based)**          | `redirect.js` (+69, -1), `README.md` (+1, -1) |
 
 `9a34bd5` HEAD'dir ve **`origin/main` ile senkrondur** (push edildi: kullanıcı onayıyla).
 
 ### `git diff --shortstat 2115b3d..9a34bd5`
+
 ```
  2 files changed, 70 insertions(+), 2 deletions(-)
 ```
@@ -111,10 +112,10 @@ Toplam commit: 10
 
 ### Faz 3'te DEĞİŞTİRİLEN dosyalar (sadece 2)
 
-| Dosya | Değişiklik | Açıklama |
-|---|---|---|
-| `src/content/redirect.js` | Placeholder (1 satır) → tam implementation (69 satır) | IIFE + `'use strict'`, 3 regex, `computeRedirect()`, `tick()`, iki katmanlı loop guard |
-| `README.md` | Tek satır | "Mevcut durum: **Faz 1 (Proje iskeleti)**." → "Mevcut durum: **Faz 3 (URL yönlendirme)**." (satır 53) |
+| Dosya                     | Değişiklik                                            | Açıklama                                                                                              |
+| ------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/content/redirect.js` | Placeholder (1 satır) → tam implementation (69 satır) | IIFE + `'use strict'`, 3 regex, `computeRedirect()`, `tick()`, iki katmanlı loop guard                |
+| `README.md`               | Tek satır                                             | "Mevcut durum: **Faz 1 (Proje iskeleti)**." → "Mevcut durum: **Faz 3 (URL yönlendirme)**." (satır 53) |
 
 ### Faz 3'te DOKUNULMAYAN dosyalar (Faz 1-2'den aynen kaldı)
 
@@ -130,12 +131,12 @@ Faz 1-2'deki kararlar değişmedi. Faz 3'te yeni karar **alınmadı** — kılav
 
 Kullanıcı dört kontrol noktasında yeşil ışık verdi:
 
-| Kontrol Noktası | Karar | Bağlam |
-|---|---|---|
-| KN1 — Devralınan state doğrulama sonrası | "devam edebilirsin" | Faz 2 state'i bozulmamış, kılavuzla uyumlu |
-| KN2 — Kod yazıldı, Bölüm 10 doğrulama sonrası | (implicit — KN3'e geçildi) | 2 false positive açıklandı (yorum içi `chrome.webNavigation` ve `location.replace` referansı), kabul edildi |
-| KN3 — Görsel test + konsol hata analizi sonrası | "Sıradaki adımın DevTools hatalarını incelemeni bekliyorum" → analiz sonrası "onaylıyorum" | Tüm konsol hataları başka eklenti / IG-içi olarak tespit edildi |
-| KN4 — Commit atıldı, push öncesi | "onaylıyorum" | `git push origin main` çalıştırıldı |
+| Kontrol Noktası                                 | Karar                                                                                      | Bağlam                                                                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| KN1 — Devralınan state doğrulama sonrası        | "devam edebilirsin"                                                                        | Faz 2 state'i bozulmamış, kılavuzla uyumlu                                                                  |
+| KN2 — Kod yazıldı, Bölüm 10 doğrulama sonrası   | (implicit — KN3'e geçildi)                                                                 | 2 false positive açıklandı (yorum içi `chrome.webNavigation` ve `location.replace` referansı), kabul edildi |
+| KN3 — Görsel test + konsol hata analizi sonrası | "Sıradaki adımın DevTools hatalarını incelemeni bekliyorum" → analiz sonrası "onaylıyorum" | Tüm konsol hataları başka eklenti / IG-içi olarak tespit edildi                                             |
+| KN4 — Commit atıldı, push öncesi                | "onaylıyorum"                                                                              | `git push origin main` çalıştırıldı                                                                         |
 
 ---
 
@@ -217,12 +218,12 @@ Kullanıcı dört kontrol noktasında yeşil ışık verdi:
 
 ### URL pattern'leri ve hedefleri (özet)
 
-| ID | Pattern | Regex | Hedef | Eşleşen örnekler |
-|----|---------|-------|-------|------------------|
-| F1a | `/reels/` (sidebar) | `^/reels(\/|$)` | `/` | `/reels/`, `/reels` |
-| F1b | `/reels/<id>/`, alt yollar | F1a ile aynı regex | `/` | `/reels/ABC123/`, `/reels/audio/XYZ/` |
-| F1c | `/<username>/reels/` (profil) | `^/([^/]+)/reels(\/|$)` | `/<username>` | `/instagram/reels/` → `/instagram` |
-| E1 | `/explore/`, alt yollar | `^/explore(\/|$)` | `/` | `/explore/`, `/explore/tags/<tag>/` |
+| ID  | Pattern                       | Regex               | Hedef | Eşleşen örnekler                      |
+| --- | ----------------------------- | ------------------- | ----- | ------------------------------------- | ----------------------------------- |
+| F1a | `/reels/` (sidebar)           | `^/reels(\/         | $)`   | `/`                                   | `/reels/`, `/reels`                 |
+| F1b | `/reels/<id>/`, alt yollar    | F1a ile aynı regex  | `/`   | `/reels/ABC123/`, `/reels/audio/XYZ/` |
+| F1c | `/<username>/reels/` (profil) | `^/([^/]+)/reels(\/ | $)`   | `/<username>`                         | `/instagram/reels/` → `/instagram`  |
+| E1  | `/explore/`, alt yollar       | `^/explore(\/       | $)`   | `/`                                   | `/explore/`, `/explore/tags/<tag>/` |
 
 **Regex sıralaması (kasıtlı, değiştirilmemeli):** F1a/b → E1 → F1c. F1c'nin `[^/]+` yakalayıcısı `reels` veya `explore` username'lerini de yakalayabilirdi; sıralama bu çakışmayı önler.
 
@@ -289,35 +290,35 @@ Test ortamı: Chrome (kullanıcının ana tarayıcısı), kullanıcının kendi 
 
 ### Temel akış
 
-| Madde | Sonuç |
-|---|---|
-| F1a — `instagram.com/reels/` → `/`'a yönlendiriliyor, flicker yok | ✓ |
-| F1a — Geri tuşuyla Reels'e dönmüyor (history temiz) | ✓ |
-| F1b — `instagram.com/reels/<random-id>/` → `/`'a | ✓ |
-| F1b — `instagram.com/reels/audio/<id>/` → `/`'a | ✓ |
-| F1c — `instagram.com/instagram/reels/` → `instagram.com/instagram`'a (profile, ana sayfa değil) | ✓ |
-| E1 — `instagram.com/explore/` → `/`'a | ✓ |
-| E1 — `instagram.com/explore/tags/<tag>/` → `/`'a | ✓ |
+| Madde                                                                                           | Sonuç |
+| ----------------------------------------------------------------------------------------------- | ----- |
+| F1a — `instagram.com/reels/` → `/`'a yönlendiriliyor, flicker yok                               | ✓     |
+| F1a — Geri tuşuyla Reels'e dönmüyor (history temiz)                                             | ✓     |
+| F1b — `instagram.com/reels/<random-id>/` → `/`'a                                                | ✓     |
+| F1b — `instagram.com/reels/audio/<id>/` → `/`'a                                                 | ✓     |
+| F1c — `instagram.com/instagram/reels/` → `instagram.com/instagram`'a (profile, ana sayfa değil) | ✓     |
+| E1 — `instagram.com/explore/` → `/`'a                                                           | ✓     |
+| E1 — `instagram.com/explore/tags/<tag>/` → `/`'a                                                | ✓     |
 
 ### Loop kontrol (Faz 3'ün en kritik testi)
 
-| Madde | Sonuç |
-|---|---|
+| Madde                                       | Sonuç |
+| ------------------------------------------- | ----- |
 | Donma, flicker, "Too many redirects" hatası | ✓ Yok |
-| Console'da `Maximum call stack` | ✓ Yok |
-| Tarayıcı URL bar'da titreşim | ✓ Yok |
+| Console'da `Maximum call stack`             | ✓ Yok |
+| Tarayıcı URL bar'da titreşim                | ✓ Yok |
 
 İki katmanlı loop guard (`target !== location.pathname` + `pollingPaused` flag) doğru çalışıyor.
 
 ### Sağlık kontrolü (regresyon)
 
-| Madde | Sonuç |
-|---|---|
-| `instagram.com/` (ana sayfa) — yönlendirme yok | ✓ |
-| `instagram.com/instagram/` (normal profile) — yönlendirme yok | ✓ |
-| `instagram.com/p/<photo-id>/` (foto post) — yönlendirme yok | ✓ |
-| Faz 2 CSS engellemeleri çalışıyor (sidebar Reels/Keşfet gizli, feed reel'leri gizli) | ✓ |
-| Eklenti devre dışı bırakılınca Reels/Explore URL'leri normal açılıyor | ✓ |
+| Madde                                                                                | Sonuç |
+| ------------------------------------------------------------------------------------ | ----- |
+| `instagram.com/` (ana sayfa) — yönlendirme yok                                       | ✓     |
+| `instagram.com/instagram/` (normal profile) — yönlendirme yok                        | ✓     |
+| `instagram.com/p/<photo-id>/` (foto post) — yönlendirme yok                          | ✓     |
+| Faz 2 CSS engellemeleri çalışıyor (sidebar Reels/Keşfet gizli, feed reel'leri gizli) | ✓     |
+| Eklenti devre dışı bırakılınca Reels/Explore URL'leri normal açılıyor                | ✓     |
 
 ### Konsol hata analizi (kullanıcı DevTools loglarını paylaştı)
 
@@ -335,27 +336,27 @@ Gözlenen hatalar:
 
 ## 10. Faz 3 Tamamlandı Şartları (PHASE3_GUIDE.md Bölüm 12)
 
-| Şart | Durum |
-|---|---|
-| `src/content/redirect.js` Bölüm 6 şablonuyla dolduruldu (birebir) | ✅ |
-| IIFE wrap + `'use strict'` mevcut | ✅ |
-| 3 URL pattern (REELS_RE, EXPLORE_RE, PROFILE_REELS_RE) tanımlı | ✅ |
-| `computeRedirect()` ve `tick()` fonksiyonları şablondaki gibi | ✅ |
-| `location.replace` kullanılıyor (`location.href =` YOK) | ✅ |
-| Loop guard iki katmanlı (target check + pollingPaused flag) | ✅ |
-| Initial tick + setInterval ikisi de var | ✅ |
-| Hiçbir yasaklı API (`chrome.webNavigation`, `chrome.tabs`, `chrome.storage`, `chrome.runtime`) kullanılmamış | ✅ |
-| Hiçbir dış network çağrısı (`fetch`, `XMLHttpRequest`) | ✅ |
-| `eval`, `new Function`, `var` yok | ✅ |
-| `console.log` production'a düşmüyor | ✅ |
-| `manifest.json`, `block.css`, `_locales/`, popup dosyaları DEĞİŞMEDİ | ✅ |
-| `README.md`'de sadece "Mevcut durum" satırı değişti (Faz 1 → Faz 3) | ✅ |
-| Görsel test (Bölüm 9) yapıldı ve geçti | ✅ |
-| Loop kontrol testi geçti — donma/flicker yok | ✅ |
-| Eklenti devre dışı bırakılınca Reels/Explore URL'leri normal açılıyor | ✅ |
-| Konsola eklenti kaynaklı yeni hata düşmüyor | ✅ |
-| Commit atıldı: `9a34bd5` | ✅ |
-| Push için kullanıcı onayı alındı ve push edildi | ✅ `origin/main` ile senkron |
+| Şart                                                                                                         | Durum                        |
+| ------------------------------------------------------------------------------------------------------------ | ---------------------------- |
+| `src/content/redirect.js` Bölüm 6 şablonuyla dolduruldu (birebir)                                            | ✅                           |
+| IIFE wrap + `'use strict'` mevcut                                                                            | ✅                           |
+| 3 URL pattern (REELS_RE, EXPLORE_RE, PROFILE_REELS_RE) tanımlı                                               | ✅                           |
+| `computeRedirect()` ve `tick()` fonksiyonları şablondaki gibi                                                | ✅                           |
+| `location.replace` kullanılıyor (`location.href =` YOK)                                                      | ✅                           |
+| Loop guard iki katmanlı (target check + pollingPaused flag)                                                  | ✅                           |
+| Initial tick + setInterval ikisi de var                                                                      | ✅                           |
+| Hiçbir yasaklı API (`chrome.webNavigation`, `chrome.tabs`, `chrome.storage`, `chrome.runtime`) kullanılmamış | ✅                           |
+| Hiçbir dış network çağrısı (`fetch`, `XMLHttpRequest`)                                                       | ✅                           |
+| `eval`, `new Function`, `var` yok                                                                            | ✅                           |
+| `console.log` production'a düşmüyor                                                                          | ✅                           |
+| `manifest.json`, `block.css`, `_locales/`, popup dosyaları DEĞİŞMEDİ                                         | ✅                           |
+| `README.md`'de sadece "Mevcut durum" satırı değişti (Faz 1 → Faz 3)                                          | ✅                           |
+| Görsel test (Bölüm 9) yapıldı ve geçti                                                                       | ✅                           |
+| Loop kontrol testi geçti — donma/flicker yok                                                                 | ✅                           |
+| Eklenti devre dışı bırakılınca Reels/Explore URL'leri normal açılıyor                                        | ✅                           |
+| Konsola eklenti kaynaklı yeni hata düşmüyor                                                                  | ✅                           |
+| Commit atıldı: `9a34bd5`                                                                                     | ✅                           |
+| Push için kullanıcı onayı alındı ve push edildi                                                              | ✅ `origin/main` ile senkron |
 
 **18/18 ✓** — Faz 3 eksiksiz tamamlandı.
 
@@ -368,6 +369,7 @@ Gözlenen hatalar:
 Henüz **kılavuz yok**. PHASE3_GUIDE.md Bölüm 14 ("Faz 4-5'e Hazırlık") sıradaki fazın Faz 4 veya doğrudan Faz 5 olabileceğini, bu kararı kullanıcının vereceğini belirtir.
 
 **Faz 5'in beklenen kapsamı (PHASE3_GUIDE.md Bölüm 14'ten):**
+
 - `chrome.storage.local`'dan `{ blockReels: bool, blockExplore: bool, blockProfileReels: bool }` benzeri toggle'lar okunacak.
 - `redirect.js`'in `computeRedirect()` fonksiyonu storage'a göre koşullu çalışacak.
 - `chrome.storage.onChanged` ile canlı uygulama.
@@ -441,21 +443,21 @@ grep "Mevcut durum" README.md              # "Faz 3 (URL yönlendirme)" döndür
 
 ## 13. Açık Konular / Henüz Yapılmadıklar
 
-| Konu | Faz | Not |
-|---|---|---|
-| Faz 4 kararı (Faz 4 mü, doğrudan Faz 5 mi?) | Kullanıcı | Kullanıcı bu kararı verecek |
-| Popup UI + toggle'lar | Faz 5 | A1/A2/D1/G1/F1a/F1b/F1c/E1 hepsi "her zaman aktif"; Faz 5'te kullanıcı kontrolüne geçecek |
-| `chrome.storage.local` entegrasyonu | Faz 5 | Hem `redirect.js` hem `block.css` refactor gerekecek; `storage` izni eklenecek |
-| `chrome.storage.onChanged` canlı güncelleme | Faz 5 | Toggle değişikliği anında uygulanmalı |
-| Gerçek ikon tasarımları | Faz 10 | Placeholder PNG'ler hâlâ kullanımda |
-| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Faz 2-3'te de getirilmedi |
-| `package.json` (devDependencies için) | Opsiyonel | Sadece kullanıcı isterse |
-| Test infrastructure | Faz 10 | Henüz yok |
-| CI/CD (GitHub Actions) | Faz 13 | Yok |
-| AMO / Web Store submission | Faz 13 | Yok |
-| Eklenti versiyonu | `0.1.0` | Faz 13 öncesi bump kararı kullanıcıda |
-| G1 uzun-vade DOM stability | Faz 5+ | IG redesign sürecinde; periyodik yeniden değerlendirme önerisi (Faz 2 handoff Bölüm 13) |
-| Redirect.js uzun-vade IG SPA stability | Faz 5+ | IG'nin `pushState` davranışı değişirse polling süresi yeniden değerlendirilebilir |
+| Konu                                          | Faz                  | Not                                                                                       |
+| --------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| Faz 4 kararı (Faz 4 mü, doğrudan Faz 5 mi?)   | Kullanıcı            | Kullanıcı bu kararı verecek                                                               |
+| Popup UI + toggle'lar                         | Faz 5                | A1/A2/D1/G1/F1a/F1b/F1c/E1 hepsi "her zaman aktif"; Faz 5'te kullanıcı kontrolüne geçecek |
+| `chrome.storage.local` entegrasyonu           | Faz 5                | Hem `redirect.js` hem `block.css` refactor gerekecek; `storage` izni eklenecek            |
+| `chrome.storage.onChanged` canlı güncelleme   | Faz 5                | Toggle değişikliği anında uygulanmalı                                                     |
+| Gerçek ikon tasarımları                       | Faz 10               | Placeholder PNG'ler hâlâ kullanımda                                                       |
+| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Faz 2-3'te de getirilmedi                                                                 |
+| `package.json` (devDependencies için)         | Opsiyonel            | Sadece kullanıcı isterse                                                                  |
+| Test infrastructure                           | Faz 10               | Henüz yok                                                                                 |
+| CI/CD (GitHub Actions)                        | Faz 13               | Yok                                                                                       |
+| AMO / Web Store submission                    | Faz 13               | Yok                                                                                       |
+| Eklenti versiyonu                             | `0.1.0`              | Faz 13 öncesi bump kararı kullanıcıda                                                     |
+| G1 uzun-vade DOM stability                    | Faz 5+               | IG redesign sürecinde; periyodik yeniden değerlendirme önerisi (Faz 2 handoff Bölüm 13)   |
+| Redirect.js uzun-vade IG SPA stability        | Faz 5+               | IG'nin `pushState` davranışı değişirse polling süresi yeniden değerlendirilebilir         |
 
 ---
 

@@ -8,31 +8,31 @@
 
 ## 1. Proje Kimliği
 
-| Alan | Değer |
-|---|---|
-| Proje adı | **Reels Off** (TR ve EN aynı) |
-| Tür | Chrome + Firefox MV3 tarayıcı eklentisi |
+| Alan                        | Değer                                                                                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proje adı                   | **Reels Off** (TR ve EN aynı)                                                                                                                 |
+| Tür                         | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                                       |
 | Tek amaç (Web Store gereği) | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek kullanıcının dikkat dağıtıcı içeriklere maruz kalmasını azaltır." |
-| Sahibi | Kerem Tuna |
-| Telif yılı | 2026 |
-| Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO) |
-| Diller | Türkçe (varsayılan), İngilizce (fallback) |
-| Mevcut faz | **Faz 1 tamamlandı**; sıradaki Faz 2 (Content Script CSS Injection) |
+| Sahibi                      | Kerem Tuna                                                                                                         |
+| Telif yılı                  | 2026                                                                                                                                          |
+| Hedef mağazalar             | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                                      |
+| Diller                      | Türkçe (varsayılan), İngilizce (fallback)                                                                                                     |
+| Mevcut faz                  | **Faz 1 tamamlandı**; sıradaki Faz 2 (Content Script CSS Injection)                                                                           |
 
 ### Teknik kararlar (non-negotiable)
 
-| Karar | Sebep |
-|---|---|
-| Vanilla JavaScript | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi |
-| Bundler yok | Web Store reviewer kaynak kodu okur — minify yasak |
-| `package.json` opsiyonel | Eklenirse sadece `devDependencies` (ESLint/Prettier) |
-| CSS-first engelleme | Faz 2-4'te Instagram class isimleri yerine href-first seçici |
-| `chrome.storage.local` | sync **değil** — Google sunucularına veri gitmez |
-| CSP sıkı | `script-src 'self'; object-src 'none'; base-uri 'none';` |
-| `host_permissions` tek entry | Sadece `https://www.instagram.com/*` — `<all_urls>` yasak |
-| `permissions` boş başlar | İhtiyaç çıktıkça eklenir |
-| Build adımı yok | Klasör doğrudan yüklenebilir |
-| Telemetri / analitik | **Hiç** — hiçbir network çağrısı |
+| Karar                        | Sebep                                                        |
+| ---------------------------- | ------------------------------------------------------------ |
+| Vanilla JavaScript           | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi            |
+| Bundler yok                  | Web Store reviewer kaynak kodu okur — minify yasak           |
+| `package.json` opsiyonel     | Eklenirse sadece `devDependencies` (ESLint/Prettier)         |
+| CSS-first engelleme          | Faz 2-4'te Instagram class isimleri yerine href-first seçici |
+| `chrome.storage.local`       | sync **değil** — Google sunucularına veri gitmez             |
+| CSP sıkı                     | `script-src 'self'; object-src 'none'; base-uri 'none';`     |
+| `host_permissions` tek entry | Sadece `https://www.instagram.com/*` — `<all_urls>` yasak    |
+| `permissions` boş başlar     | İhtiyaç çıktıkça eklenir                                     |
+| Build adımı yok              | Klasör doğrudan yüklenebilir                                 |
+| Telemetri / analitik         | **Hiç** — hiçbir network çağrısı                             |
 
 ---
 
@@ -71,11 +71,11 @@ Toplam commit: 3
 
 ### Commit zinciri (eski → yeni)
 
-| Hash | Mesaj | Kapsam |
-|---|---|---|
-| `a63ed55` | Initial scaffold: Phase 1 (project skeleton + manifest + legal docs) | 20 dosya, 1118 ekleme, Faz 1 ana iskelet |
-| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load (to be replaced in Phase 10) | 4 PNG + `.gitkeep` temizliği |
-| `8c95378` | Move _locales to extension root (Chrome MV3 requires hard-coded path) | `src/_locales/` → `_locales/` rename |
+| Hash      | Mesaj                                                                          | Kapsam                                   |
+| --------- | ------------------------------------------------------------------------------ | ---------------------------------------- |
+| `a63ed55` | Initial scaffold: Phase 1 (project skeleton + manifest + legal docs)           | 20 dosya, 1118 ekleme, Faz 1 ana iskelet |
+| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load (to be replaced in Phase 10) | 4 PNG + `.gitkeep` temizliği             |
+| `8c95378` | Move \_locales to extension root (Chrome MV3 requires hard-coded path)         | `src/_locales/` → `_locales/` rename     |
 
 `8c95378` HEAD'dir ve GitHub origin/main ile senkronizedir.
 
@@ -85,60 +85,60 @@ Toplam commit: 3
 
 ### Kökte (kullanıcıya görünür, doğrudan değiştirilebilir)
 
-| Dosya | İçerik kategorisi | Not |
-|---|---|---|
-| `manifest.json` | Şablon dolu | MV3, kullanıcı bilgileriyle dolduruldu, valid JSON |
-| `LICENSE` | Verbatim şablon | MIT, "Kerem Tuna", yıl 2026 |
-| `README.md` | Şablon dolu | Marketing dili yok, repo URL + email doldu |
-| `PRIVACY-TR.md` | Verbatim şablon | Email placeholder dolu, başka değişiklik yok |
-| `PRIVACY-EN.md` | Verbatim şablon | Email placeholder dolu, başka değişiklik yok |
-| `.gitignore` | Verbatim şablon | Faz 1 Bölüm 6.1 |
-| `.eslintrc.json` | Verbatim şablon | Vanilla JS, no-eval/no-implied-eval vb. |
-| `.prettierrc.json` | Verbatim şablon | semi/singleQuote/2-tab vs. |
-| `PHASE1_GUIDE.md` | Kullanıcı kaynağı | **Düzenleme**; Faz 2 kılavuzu geldiğinde paralel kalır |
-| `PHASE1_HANDOFF.md` | Bu dosya | Faz 1 sonu, ajan devretme raporu |
+| Dosya               | İçerik kategorisi | Not                                                    |
+| ------------------- | ----------------- | ------------------------------------------------------ |
+| `manifest.json`     | Şablon dolu       | MV3, kullanıcı bilgileriyle dolduruldu, valid JSON     |
+| `LICENSE`           | Verbatim şablon   | MIT, "Kerem Tuna", yıl 2026                            |
+| `README.md`         | Şablon dolu       | Marketing dili yok, repo URL + email doldu             |
+| `PRIVACY-TR.md`     | Verbatim şablon   | Email placeholder dolu, başka değişiklik yok           |
+| `PRIVACY-EN.md`     | Verbatim şablon   | Email placeholder dolu, başka değişiklik yok           |
+| `.gitignore`        | Verbatim şablon   | Faz 1 Bölüm 6.1                                        |
+| `.eslintrc.json`    | Verbatim şablon   | Vanilla JS, no-eval/no-implied-eval vb.                |
+| `.prettierrc.json`  | Verbatim şablon   | semi/singleQuote/2-tab vs.                             |
+| `PHASE1_GUIDE.md`   | Kullanıcı kaynağı | **Düzenleme**; Faz 2 kılavuzu geldiğinde paralel kalır |
+| `PHASE1_HANDOFF.md` | Bu dosya          | Faz 1 sonu, ajan devretme raporu                       |
 
 ### `_locales/` (kök seviyede — Chrome MV3 ZORUNLULUK)
 
-| Dosya | İçerik |
-|---|---|
-| `_locales/tr/messages.json` | `extName` = "Reels Off", `extDescription` = "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz." |
+| Dosya                       | İçerik                                                                                                                                                                |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_locales/tr/messages.json` | `extName` = "Reels Off", `extDescription` = "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz."   |
 | `_locales/en/messages.json` | `extName` = "Reels Off", `extDescription` = "Reduces distraction by hiding Reels and algorithmic content suggestions on Instagram's web interface. Collects no data." |
 
 İki dil aynı key setini (`extName`, `extDescription`) içerir.
 
 ### `src/content/` (Faz 2-4 kapsamı)
 
-| Dosya | Durum |
-|---|---|
-| `src/content/block.css` | Sadece yorum: `/* Faz 2-4'te doldurulacak */` |
-| `src/content/redirect.js` | Sadece yorum: `// Faz 2'de doldurulacak` |
-| `src/content/.gitkeep` | Klasör placeholder'ı |
+| Dosya                     | Durum                                         |
+| ------------------------- | --------------------------------------------- |
+| `src/content/block.css`   | Sadece yorum: `/* Faz 2-4'te doldurulacak */` |
+| `src/content/redirect.js` | Sadece yorum: `// Faz 2'de doldurulacak`      |
+| `src/content/.gitkeep`    | Klasör placeholder'ı                          |
 
 ### `src/popup/` (Faz 5 kapsamı)
 
-| Dosya | Durum |
-|---|---|
+| Dosya                  | Durum                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------- |
 | `src/popup/popup.html` | Boilerplate iskelet (12 satır); body içeriği `<!-- Faz 5'te doldurulacak -->` |
-| `src/popup/popup.css` | `/* Faz 5'te doldurulacak */` |
-| `src/popup/popup.js` | `// Faz 5'te doldurulacak` |
-| `src/popup/.gitkeep` | Klasör placeholder'ı |
+| `src/popup/popup.css`  | `/* Faz 5'te doldurulacak */`                                                 |
+| `src/popup/popup.js`   | `// Faz 5'te doldurulacak`                                                    |
+| `src/popup/.gitkeep`   | Klasör placeholder'ı                                                          |
 
 ### `src/icons/` (Faz 10 kapsamı — placeholder PNG'ler mevcut)
 
-| Dosya | Boyut (byte) | Açıklama |
-|---|---|---|
-| `src/icons/icon-16.png` | 234 | Koyu gri (#262626) zemin + açık gri "X" işareti |
-| `src/icons/icon-32.png` | 395 | Aynı tasarım, 32×32 |
-| `src/icons/icon-48.png` | 475 | Aynı tasarım, 48×48 |
-| `src/icons/icon-128.png` | 1095 | Aynı tasarım, 128×128 |
+| Dosya                    | Boyut (byte) | Açıklama                                        |
+| ------------------------ | ------------ | ----------------------------------------------- |
+| `src/icons/icon-16.png`  | 234          | Koyu gri (#262626) zemin + açık gri "X" işareti |
+| `src/icons/icon-32.png`  | 395          | Aynı tasarım, 32×32                             |
+| `src/icons/icon-48.png`  | 475          | Aynı tasarım, 48×48                             |
+| `src/icons/icon-128.png` | 1095         | Aynı tasarım, 128×128                           |
 
 **Bu PNG'ler kasten geçici**; Faz 10'da gerçek tasarımla **birebir aynı isimle değiştirilecek**. Manifest yolları (`src/icons/icon-XX.png`) Faz 10'da değişmemeli.
 
 ### `docs/` (Faz 0'dan kullanıcı sağlayacak)
 
-| Dosya | Durum |
-|---|---|
+| Dosya           | Durum                                                                                                                 |
+| --------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `docs/.gitkeep` | Klasör placeholder'ı — `selectors.md` ve `threat-model.md` kullanıcının Faz 0 çıktıları (Faz 1 sırasında getirilmedi) |
 
 ---
@@ -147,17 +147,17 @@ Toplam commit: 3
 
 Faz 1 başında bir kerede toplandı; Faz 2-13'te bu kararlar **değişmemeli**:
 
-| Karar | Değer |
-|---|---|
-| Eklenti adı (TR/EN) | Reels Off / Reels Off (aynı) |
-| Açıklama TR (~130 char) | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz." (117 char) |
+| Karar                   | Değer                                                                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Eklenti adı (TR/EN)     | Reels Off / Reels Off (aynı)                                                                                                         |
+| Açıklama TR (~130 char) | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Veri toplamaz." (117 char)   |
 | Açıklama EN (~130 char) | "Reduces distraction by hiding Reels and algorithmic content suggestions on Instagram's web interface. Collects no data." (119 char) |
-| GitHub kullanıcı adı | `keremtunayetkinn` |
-| İletişim email | `ktyetkinwork@gmail.com` (privacy policy ve README'de görünür) |
-| Firefox Android desteği | Evet → manifest'te `gecko_android: {}` mevcut |
-| ESLint/Prettier config | Evet → dosyalar oluşturuldu (npm kurulmadı, sadece referans) |
-| GitHub repo visibility | Private (kullanıcı manuel oluşturdu) |
-| Gecko ID | `@reels-off.kerem-tuna` (slug + ad) |
+| GitHub kullanıcı adı    | `keremtunayetkinn`                                                                                                                   |
+| İletişim email          | `ktyetkinwork@gmail.com` (privacy policy ve README'de görünür)                                                                       |
+| Firefox Android desteği | Evet → manifest'te `gecko_android: {}` mevcut                                                                                        |
+| ESLint/Prettier config  | Evet → dosyalar oluşturuldu (npm kurulmadı, sadece referans)                                                                         |
+| GitHub repo visibility  | Private (kullanıcı manuel oluşturdu)                                                                                                 |
+| Gecko ID                | `@reels-off.kerem-tuna` (slug + ad)                                                                                                  |
 
 ---
 
@@ -178,9 +178,7 @@ Faz 1 başında bir kerede toplandı; Faz 2-13'te bu kararlar **değişmemeli**:
     "128": "src/icons/icon-128.png"
   },
 
-  "host_permissions": [
-    "https://www.instagram.com/*"
-  ],
+  "host_permissions": ["https://www.instagram.com/*"],
 
   "content_scripts": [
     {
@@ -252,22 +250,22 @@ Sadece `_locales/` istisnası vardır. Faz 2-13'te yeni bir klasör yapısı ön
 
 ## 8. Faz 1 Tamamlandı Şartları (PHASE1_GUIDE.md Bölüm 10)
 
-| Şart | Durum |
-|---|---|
-| Git repo başlatıldı, ilk commit atıldı | ✅ `main` branch, 3 commit |
-| Klasör yapısı tam | ✅ (Sapma 2 ile: `_locales/` kökte) |
-| `manifest.json` valid JSON, doğrulama testleri geçti | ✅ |
+| Şart                                                                       | Durum                                   |
+| -------------------------------------------------------------------------- | --------------------------------------- |
+| Git repo başlatıldı, ilk commit atıldı                                     | ✅ `main` branch, 3 commit              |
+| Klasör yapısı tam                                                          | ✅ (Sapma 2 ile: `_locales/` kökte)     |
+| `manifest.json` valid JSON, doğrulama testleri geçti                       | ✅                                      |
 | `manifest.json` Bölüm 6.2 şablonuyla birebir uyumlu (placeholder'lar dolu) | ✅ (`gecko_android: {}` eklemesi dahil) |
-| `LICENSE` MIT, yıl 2026, isim Kerem Tuna | ✅ |
-| `README.md` placeholder'lar dolu, marketing dili yok | ✅ |
-| `PRIVACY-TR.md` ve `PRIVACY-EN.md` birebir şablon | ✅ |
-| `_locales/tr/messages.json` ve `_locales/en/messages.json` aynı key'ler | ✅ (`extName`, `extDescription`) |
-| `.gitignore` Bölüm 6.1 ile aynı | ✅ |
-| `.eslintrc.json` ve `.prettierrc.json` mevcut | ✅ |
-| `src/{content,popup,icons}/` placeholder'lar | ✅ (icons placeholder PNG ile) |
-| Chrome'da hata vermeden yüklenebiliyor | ✅ (kullanıcı manuel doğruladı) |
-| Firefox 140+'ta hata vermeden yüklenebiliyor | ✅ (kullanıcı manuel doğruladı) |
-| Yasaklı izin/framework/bağımlılık yok | ✅ |
+| `LICENSE` MIT, yıl 2026, isim Kerem Tuna                                   | ✅                                      |
+| `README.md` placeholder'lar dolu, marketing dili yok                       | ✅                                      |
+| `PRIVACY-TR.md` ve `PRIVACY-EN.md` birebir şablon                          | ✅                                      |
+| `_locales/tr/messages.json` ve `_locales/en/messages.json` aynı key'ler    | ✅ (`extName`, `extDescription`)        |
+| `.gitignore` Bölüm 6.1 ile aynı                                            | ✅                                      |
+| `.eslintrc.json` ve `.prettierrc.json` mevcut                              | ✅                                      |
+| `src/{content,popup,icons}/` placeholder'lar                               | ✅ (icons placeholder PNG ile)          |
+| Chrome'da hata vermeden yüklenebiliyor                                     | ✅ (kullanıcı manuel doğruladı)         |
+| Firefox 140+'ta hata vermeden yüklenebiliyor                               | ✅ (kullanıcı manuel doğruladı)         |
+| Yasaklı izin/framework/bağımlılık yok                                      | ✅                                      |
 
 **Bonus (kapsam dışıydı, talep üzerine yapıldı):** GitHub private remote'a push.
 
@@ -281,12 +279,12 @@ Sadece `_locales/` istisnası vardır. Faz 2-13'te yeni bir klasör yapısı ön
 - **Hedef dosya:** `src/content/block.css` (manifest'te zaten referanslı).
 - **Faz 0 seçici çıktıları (PHASE1_GUIDE.md Bölüm 3'ten — Faz 2'de CSS'e döküleceği varsayılır):**
 
-  | ID | Element | Seçici |
-  |---|---|---|
-  | A1 | Sidebar Reels linki | `a[href="/reels/"]` |
-  | A2 | Sidebar Keşfet linki (opsiyonel) | `a[href="/explore/"]` |
-  | D1 | Profil Reels tab | `main a[href$="/reels/"]:not([href="/reels/"])` |
-  | G1 | Feed'e gömülü tekil Reel post'ları | `a[href^="/reels/"]:not([href="/reels/"])` |
+  | ID  | Element                            | Seçici                                          |
+  | --- | ---------------------------------- | ----------------------------------------------- |
+  | A1  | Sidebar Reels linki                | `a[href="/reels/"]`                             |
+  | A2  | Sidebar Keşfet linki (opsiyonel)   | `a[href="/explore/"]`                           |
+  | D1  | Profil Reels tab                   | `main a[href$="/reels/"]:not([href="/reels/"])` |
+  | G1  | Feed'e gömülü tekil Reel post'ları | `a[href^="/reels/"]:not([href="/reels/"])`      |
 
 ### Yeni ajanın **başlamadan** doğrulaması gerekenler
 
@@ -350,15 +348,15 @@ Bu komutlar geçerse repo Faz 2'ye hazır.
 
 ## 11. Açık Konular / Henüz Yapılmadıklar
 
-| Konu | Faz | Not |
-|---|---|---|
-| Gerçek ikon tasarımları | Faz 10 | Şu an placeholder PNG var |
-| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Repo'ya henüz konmadı |
-| `package.json` (devDependencies için) | Opsiyonel | Sadece kullanıcı isterse |
-| Test infrastructure | Faz 10 | Faz 1'de hiç yok |
-| CI/CD (GitHub Actions) | Faz 13 | Yok |
-| AMO submission, Web Store submission | Faz 13 | Yok |
-| Eklenti versiyonu | `0.1.0` | Faz 13 öncesi bump için kullanıcı kararı |
+| Konu                                          | Faz                  | Not                                      |
+| --------------------------------------------- | -------------------- | ---------------------------------------- |
+| Gerçek ikon tasarımları                       | Faz 10               | Şu an placeholder PNG var                |
+| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Repo'ya henüz konmadı                    |
+| `package.json` (devDependencies için)         | Opsiyonel            | Sadece kullanıcı isterse                 |
+| Test infrastructure                           | Faz 10               | Faz 1'de hiç yok                         |
+| CI/CD (GitHub Actions)                        | Faz 13               | Yok                                      |
+| AMO submission, Web Store submission          | Faz 13               | Yok                                      |
+| Eklenti versiyonu                             | `0.1.0`              | Faz 13 öncesi bump için kullanıcı kararı |
 
 ---
 

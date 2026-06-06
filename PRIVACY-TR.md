@@ -9,6 +9,7 @@ Bu eklenti **hiçbir kişisel veri toplamaz, işlemez veya iletmez.** Hiçbir an
 ## Toplanmayan veriler
 
 Eklenti aşağıdaki veri türlerinin **hiçbirini** toplamaz, kaydetmez veya iletmez:
+
 - Kişisel kimlik bilgileri (ad, e-posta, telefon, adres)
 - Kimlik doğrulama bilgileri (şifre, oturum jetonu, çerez)
 - Konum verisi
@@ -20,6 +21,7 @@ Eklenti aşağıdaki veri türlerinin **hiçbirini** toplamaz, kaydetmez veya il
 ## Yerel depolama
 
 Eklentinin tek depoladığı bilgi, kullanıcının açıp kapattığı engelleme özelliklerinin tercihleridir (boolean değerler). Bu veriler:
+
 - `chrome.storage.local` API'si üzerinden **yalnızca kullanıcının cihazında** saklanır
 - Hiçbir sunucuya gönderilmez
 - Hiçbir üçüncü tarafla paylaşılmaz
@@ -28,6 +30,7 @@ Eklentinin tek depoladığı bilgi, kullanıcının açıp kapattığı engellem
 ## İzinler
 
 Eklenti yalnızca aşağıdaki izni kullanır:
+
 - **`https://www.instagram.com/*` (host izni):** Eklentinin Instagram web sayfalarında çalışıp Reels ve önerilen içerikleri gizleyebilmesi için gereklidir. Eklenti yalnızca bu siteye erişir, başka hiçbir siteye değil.
 
 ## Üçüncü taraflar

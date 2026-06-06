@@ -2,7 +2,7 @@
 
 > **Bu belgenin amacı:** Faz 4 tamamlanmış halde devralınan projeyi, Faz 5 (Cilalama / Stabilizasyon) kapsamında, halüsinasyon riskini minimize ederek, her kritik adımda kontrol noktası bulundurarak ve kapsam sınırlarına sıkı bağlı kalarak ilerletmek. Bu belge bir **uygulama kılavuzudur**; Claude Code bunu okuyup uygular, "iyileştirmez", kapsam dışına çıkmaz.
 >
-> **Bu kılavuz `PHASE4_HANDOFF.md` ile birlikte okunmalıdır.** Handoff projenin *geçmişini* anlatır; bu kılavuz Faz 5'te *ne yapılacağını* tanımlar. Çelişki halinde bu kılavuz Faz 5 görevleri için üstündür.
+> **Bu kılavuz `PHASE4_HANDOFF.md` ile birlikte okunmalıdır.** Handoff projenin _geçmişini_ anlatır; bu kılavuz Faz 5'te _ne yapılacağını_ tanımlar. Çelişki halinde bu kılavuz Faz 5 görevleri için üstündür.
 
 ---
 
@@ -13,7 +13,7 @@ Aşağıdaki sıralama bağlayıcıdır. Üstteki, alttakini ezer:
 1. **Canlı dosya içeriği** (`git`'in değil, diskteki gerçek dosyaların o anki hali) — **TEK DOĞRULUK KAYNAĞI**.
 2. **Bu kılavuz** (`PHASE5_GUIDE.md`).
 3. **MV3 / WebExtensions resmi dokümantasyonu** (Chrome + MDN).
-4. **Önceki handoff'lar** (`PHASE4_HANDOFF.md`, `PHASE3_HANDOFF.md`, …) — *referans/bağlam*, otorite değil.
+4. **Önceki handoff'lar** (`PHASE4_HANDOFF.md`, `PHASE3_HANDOFF.md`, …) — _referans/bağlam_, otorite değil.
 5. **Kullanıcının canlı talimatı** her zaman geçerli; belirsizlikte kullanıcıya sorulur.
 
 ### 0.1 — Git commit ağacı OTORİTE DEĞİLDİR (Faz 5'in en kritik kuralı)
@@ -38,16 +38,16 @@ Bu projenin commit geçmişinde **kanıtlanmış tutarsızlıklar** vardır:
 
 ## 1. Proje Kimliği (Faz 5 başı)
 
-| Alan | Değer |
-|---|---|
-| Proje adı | **Reels Off** (TR ve EN aynı) |
-| Tür | Chrome + Firefox MV3 tarayıcı eklentisi |
-| Tek amaç | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Tercihler yalnızca cihazda saklanır." |
-| Sahibi | Kerem Tuna |
-| Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO) |
-| Diller | Türkçe (varsayılan), İngilizce (fallback) |
-| Mevcut faz | **Faz 4 tamamlandı**; bu belge **Faz 5'i (Cilalama)** tanımlar |
-| Nihai hedef | Public lansman (Faz 5 bu hedefe giden *kod kalitesi* adımıdır; lansmanın kendisi sonraki fazlardır) |
+| Alan            | Değer                                                                                                                                         |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proje adı       | **Reels Off** (TR ve EN aynı)                                                                                                                 |
+| Tür             | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                                       |
+| Tek amaç        | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Tercihler yalnızca cihazda saklanır." |
+| Sahibi          | Kerem Tuna                                                                                                         |
+| Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                                      |
+| Diller          | Türkçe (varsayılan), İngilizce (fallback)                                                                                                     |
+| Mevcut faz      | **Faz 4 tamamlandı**; bu belge **Faz 5'i (Cilalama)** tanımlar                                                                                |
+| Nihai hedef     | Public lansman (Faz 5 bu hedefe giden _kod kalitesi_ adımıdır; lansmanın kendisi sonraki fazlardır)                                           |
 
 ### Değişmez teknik kararlar (Faz 1-4 mirası — Faz 5'te KORUNUR)
 
@@ -61,15 +61,15 @@ Faz 5 = **Cilalama ve Stabilizasyon**. Yeni kullanıcı-yüzü özelliği EKLENM
 
 ### 2.1 — Kapsam İÇİ (bu fazda yapılacak)
 
-| # | Görev | Tip | Öncelik |
-|---|---|---|---|
-| G5.1 | **G1 over-match leaf-only fix** | Kod değişikliği (block.css) | **Yüksek** |
-| G5.2 | redirect.js cold-read race (yönlendirme toggle'ları) — **araştır + kullanıcıya sun** | Karar | Orta |
-| G5.3 | `DEFAULTS` shared module — **değerlendir + kullanıcıya sun** | Karar | Düşük |
-| G5.4 | `schemaVersion` — **değerlendir + kullanıcıya sun** | Karar | Düşük |
-| G5.5 | ESLint/Prettier `package.json` ile gerçek kurulum + lint/format | Araç | Orta |
-| G5.6 | `docs/selectors.md` + `docs/threat-model.md` yazımı | Doküman | Orta |
-| G5.7 | EN locale UI testi (şimdiye dek yalnız TR test edildi) | Test | Düşük |
+| #    | Görev                                                                                | Tip                         | Öncelik    |
+| ---- | ------------------------------------------------------------------------------------ | --------------------------- | ---------- |
+| G5.1 | **G1 over-match leaf-only fix**                                                      | Kod değişikliği (block.css) | **Yüksek** |
+| G5.2 | redirect.js cold-read race (yönlendirme toggle'ları) — **araştır + kullanıcıya sun** | Karar                       | Orta       |
+| G5.3 | `DEFAULTS` shared module — **değerlendir + kullanıcıya sun**                         | Karar                       | Düşük      |
+| G5.4 | `schemaVersion` — **değerlendir + kullanıcıya sun**                                  | Karar                       | Düşük      |
+| G5.5 | ESLint/Prettier `package.json` ile gerçek kurulum + lint/format                      | Araç                        | Orta       |
+| G5.6 | `docs/selectors.md` + `docs/threat-model.md` yazımı                                  | Doküman                     | Orta       |
+| G5.7 | EN locale UI testi (şimdiye dek yalnız TR test edildi)                               | Test                        | Düşük      |
 
 **Önemli:** G5.2, G5.3 ve G5.4 birer **karar görevidir** — Claude Code bunları tek başına uygulamaz. Önce analiz eder, seçenekleri kullanıcıya sunar, onay alınca uygular. (Detay: Bölüm 6.)
 
@@ -102,16 +102,16 @@ Faz 1-4'teki tüm kurallar (Kural 1-24) geçerlidir. Özeti: **İyileştirici de
 
 ### 3.1 — Korunan Envanter (hiçbir görevde bozulmaz)
 
-| Mekanik | Kaynak | Neden korunur |
-|---|---|---|
-| G1 audio-filter `:not([href^="/reels/audio/"])` | Faz 2 Sapma 2 | Müzik etiketli foto post'lar yanlışlıkla gizlenmesin |
-| İki katmanlı loop guard (`target !== location.pathname` + `pollingPaused`) | Faz 3 Kural 15 | Sonsuz redirect döngüsü önlenir |
-| Regex sıralaması (F1a/b → E1 → F1c) | Faz 3 Kural 13 | Username yakalayıcısının çakışmasını önler |
-| Polling parametreleri (300ms / 1000ms) | Faz 3 Kural 11 | Doğrulanmış sweet spot |
-| `location.replace()` (asla `location.href =`) | Faz 3 Kural 14 | Geri tuşu reel'e dönmesin |
-| Default-true policy (7 toggle hepsi `true`) | Faz 4 Kural 19 | Kurulumda eklenti tam aktif |
-| `chrome.storage.local` (sync DEĞİL) | Faz 1 mimari | Privacy policy uyumu |
-| Sıkı CSP / minimal izin | Faz 1-4 | Web Store reviewer kırmızı bayrağı olmasın |
+| Mekanik                                                                    | Kaynak         | Neden korunur                                        |
+| -------------------------------------------------------------------------- | -------------- | ---------------------------------------------------- |
+| G1 audio-filter `:not([href^="/reels/audio/"])`                            | Faz 2 Sapma 2  | Müzik etiketli foto post'lar yanlışlıkla gizlenmesin |
+| İki katmanlı loop guard (`target !== location.pathname` + `pollingPaused`) | Faz 3 Kural 15 | Sonsuz redirect döngüsü önlenir                      |
+| Regex sıralaması (F1a/b → E1 → F1c)                                        | Faz 3 Kural 13 | Username yakalayıcısının çakışmasını önler           |
+| Polling parametreleri (300ms / 1000ms)                                     | Faz 3 Kural 11 | Doğrulanmış sweet spot                               |
+| `location.replace()` (asla `location.href =`)                              | Faz 3 Kural 14 | Geri tuşu reel'e dönmesin                            |
+| Default-true policy (7 toggle hepsi `true`)                                | Faz 4 Kural 19 | Kurulumda eklenti tam aktif                          |
+| `chrome.storage.local` (sync DEĞİL)                                        | Faz 1 mimari   | Privacy policy uyumu                                 |
+| Sıkı CSP / minimal izin                                                    | Faz 1-4        | Web Store reviewer kırmızı bayrağı olmasın           |
 
 ---
 
@@ -167,6 +167,7 @@ Claude in Chrome (veya kullanıcının sağlayacağı canlı inceleme) ile Insta
 3. "Önerilen"/"Daha fazla" gibi feed bölümleri `<article>` ile mi sarılıyor? (Bu, kapsayıcı-article hipotezini doğrular.)
 
 → **[KONTROL NOKTASI 1]** DOM doğrulama bulgularını raporla.
+
 - **DOM beklendiği gibiyse** (reel post = leaf article, kapsayıcı article over-match yapıyor) → 5.1.b'ye geç.
 - **DOM farklıysa** (örn. reel post nested article içeriyor) → fix'i UYGULAMA. Alternatif seçicileri (`article:not(:has(> article))` yalnız doğrudan çocuk; `main article:has(...)` dar scope; video/aria ipucu) kullanıcıya sun, kararını bekle.
 
@@ -201,16 +202,17 @@ grep -c "display: revert !important" src/content/block.css  # 5 (değişmedi)
 
 **Davranış garantisi (4 senaryo) — kontrol et:**
 
-| Senaryo | Beklenen |
-|---|---|
-| Gerçek reel post (leaf article, reel linki var) | Gizleniyor ✓ |
-| Kapsayıcı article (içinde article'lar + reel linki) | Gizlenmiyor ✓ |
-| Müzik etiketli foto post (`/reels/audio/…`) | Gizlenmiyor ✓ (audio-filter) |
-| Sidebar Reels (`a`, article içinde değil) | A1 ile gizleniyor ✓ |
+| Senaryo                                             | Beklenen                     |
+| --------------------------------------------------- | ---------------------------- |
+| Gerçek reel post (leaf article, reel linki var)     | Gizleniyor ✓                 |
+| Kapsayıcı article (içinde article'lar + reel linki) | Gizlenmiyor ✓                |
+| Müzik etiketli foto post (`/reels/audio/…`)         | Gizlenmiyor ✓ (audio-filter) |
+| Sidebar Reels (`a`, article içinde değil)           | A1 ile gizleniyor ✓          |
 
 ### Adım 5.1.d — Görsel test (kullanıcı, canlı tarayıcı)
 
 → **[KONTROL NOKTASI 2]** Kullanıcıdan şu testleri iste, sonucu raporla:
+
 - Tüm toggle'lar ON iken ana sayfayı **uzun süre kaydır** → siyah boşluk YOK, jitter YOK olmalı.
 - Gerçek reel post'lar gizli kalmalı.
 - Müzik etiketli foto post'lar görünür kalmalı (audio-filter regresyon kontrolü).
@@ -226,9 +228,10 @@ Bu üç görev **Kural 27** kapsamındadır: Claude Code analiz yapar, net seçe
 
 ### Görev 5.2 — Cold-read race (yönlendirme toggle'ları)
 
-**Tespit:** `redirect.js` `document_start`'ta `tick()` ve `setInterval`'i storage yüklenmeden çalıştırır. 4 *gizleme* toggle'ı için race güvenlidir (default = engelleme = en kötü ihtimalle kapatılmış kural ~10ms görünür kalır). Ancak 3 *yönlendirme* toggle'ı için: kullanıcı `redirectReels`'i kapatmış olsa bile, doğrudan/bookmark ile `instagram.com/reels/`'e girişte, storage gelmeden önceki initial `tick()` `settings=DEFAULTS` (true) ile **yine de yönlendirebilir**. SPA-içi gezinmede sorun yok (storage zaten yüklü). Faz 3 handoff'u tam bu riski öngörüp "storage hazır olana kadar polling'i başlatma" çözümünü önermişti; Faz 4'te uygulanmadı.
+**Tespit:** `redirect.js` `document_start`'ta `tick()` ve `setInterval`'i storage yüklenmeden çalıştırır. 4 _gizleme_ toggle'ı için race güvenlidir (default = engelleme = en kötü ihtimalle kapatılmış kural ~10ms görünür kalır). Ancak 3 _yönlendirme_ toggle'ı için: kullanıcı `redirectReels`'i kapatmış olsa bile, doğrudan/bookmark ile `instagram.com/reels/`'e girişte, storage gelmeden önceki initial `tick()` `settings=DEFAULTS` (true) ile **yine de yönlendirebilir**. SPA-içi gezinmede sorun yok (storage zaten yüklü). Faz 3 handoff'u tam bu riski öngörüp "storage hazır olana kadar polling'i başlatma" çözümünü önermişti; Faz 4'te uygulanmadı.
 
 → **[KONTROL NOKTASI 3]** Kullanıcıya seçenekleri sun:
+
 - **(A)** Initial `tick()` ve `setInterval`'i `chrome.storage.local.get` callback'i içine taşı (storage hazır olunca başlat). Davranışı doğrular; korunan mekanikleri bozmaz; küçük ve izole değişiklik.
 - **(B)** Mevcut davranışı koru, "kabul edilebilir race" olarak dokümante et (`docs/threat-model.md`'de).
 - **(C)** Önce ek inceleme.
@@ -240,6 +243,7 @@ Kullanıcı (A)'yı seçerse: değişiklik yalnız başlatma sırasını etkilem
 **Tespit:** `DEFAULTS` objesi `redirect.js` ve `popup.js`'te ayrı ayrı, birebir aynı tanımlı. Drift riski: yeni toggle eklenirse biri unutulabilir.
 
 → **[KONTROL NOKTASI 4]** Seçenekler:
+
 - **(A)** `src/shared/defaults.js` modülü; ikisi de import eder. MV3 content script ES module desteği `manifest.json`'da `"type": "module"` gerektirir → manifest değişikliği → ek inceleme + test gerekir.
 - **(B)** Mevcut "duplicate-but-verified" pattern'i koru; ekleme prosedürünü `docs/`'a dokümante et.
 
@@ -250,6 +254,7 @@ Not: (A) manifest'e dokunduğu için risk taşır; kullanıcı seçerse dikkatli
 **Tespit:** Kılavuz niyeti (Faz 4 guide Bölüm 4) `schemaVersion: 1` yer tutmayı öneriyor; fiili DEFAULTS'ta yok (şablon Bölüm 6.5/6.8 içermiyordu). Tutarsızlık.
 
 → **[KONTROL NOKTASI 5]** Seçenekler:
+
 - **(A)** `DEFAULTS`'a `schemaVersion: 1` ekle (hem redirect.js hem popup.js), gelecekte yapısal migration'a hazırlık.
 - **(B)** Faz 5+ konusu olarak bırak, dokümante et.
 
@@ -286,6 +291,7 @@ Kullanıcı kararı.
 ## 9. Görev 5.7 — EN Locale UI Testi
 
 Şimdiye dek yalnız TR test edildi. Kullanıcıdan `chrome://settings/languages` (veya Firefox karşılığı) ile tarayıcı dilini İngilizce yapıp popup'ı açmasını iste:
+
 - 7 toggle etiketi + 2 kategori + başlık/alt başlık İngilizce görünmeli.
 - Hiçbir element `__MSG_*__` veya boş olmamalı.
 
@@ -329,23 +335,23 @@ Görev 5.7 → EN locale test raporu
 
 ## 12. Faz 5 Tamamlandı Şartları
 
-| Şart | Durum |
-|---|---|
-| G1 leaf-only fix: DOM doğrulandı, uygulandı, derin-scroll testi geçti | ☐ |
-| G1 audio-filter byte-for-byte korundu | ☐ |
-| Korunan envanter (Bölüm 3.1) bozulmadı | ☐ |
-| Cold-read race: karar verildi (uygulandı veya dokümante edildi) | ☐ |
-| DEFAULTS module: karar verildi | ☐ |
-| schemaVersion: karar verildi | ☐ |
-| `package.json` (yalnız devDependencies, `private:true`), ESLint/Prettier çalışıyor | ☐ |
-| Eklenti hâlâ klasörden doğrudan yüklenebilir (build adımı yok) | ☐ |
-| `docs/selectors.md` + `docs/threat-model.md` yazıldı, doğrulandı | ☐ |
-| EN locale UI testi yapıldı | ☐ |
-| Manifest izinleri değişmedi VEYA yalnız onaylı değişiklik (DEFAULTS module (A) seçildiyse `type:module`) | ☐ |
-| Görsel test: eklenti devre dışıyken IG normale dönüyor | ☐ |
-| Konsola eklenti kaynaklı yeni hata düşmüyor | ☐ |
-| Atomic commit'ler atıldı, mesajlar dürüst | ☐ |
-| Push için açık onay alındı | ☐ |
+| Şart                                                                                                     | Durum |
+| -------------------------------------------------------------------------------------------------------- | ----- |
+| G1 leaf-only fix: DOM doğrulandı, uygulandı, derin-scroll testi geçti                                    | ☐     |
+| G1 audio-filter byte-for-byte korundu                                                                    | ☐     |
+| Korunan envanter (Bölüm 3.1) bozulmadı                                                                   | ☐     |
+| Cold-read race: karar verildi (uygulandı veya dokümante edildi)                                          | ☐     |
+| DEFAULTS module: karar verildi                                                                           | ☐     |
+| schemaVersion: karar verildi                                                                             | ☐     |
+| `package.json` (yalnız devDependencies, `private:true`), ESLint/Prettier çalışıyor                       | ☐     |
+| Eklenti hâlâ klasörden doğrudan yüklenebilir (build adımı yok)                                           | ☐     |
+| `docs/selectors.md` + `docs/threat-model.md` yazıldı, doğrulandı                                         | ☐     |
+| EN locale UI testi yapıldı                                                                               | ☐     |
+| Manifest izinleri değişmedi VEYA yalnız onaylı değişiklik (DEFAULTS module (A) seçildiyse `type:module`) | ☐     |
+| Görsel test: eklenti devre dışıyken IG normale dönüyor                                                   | ☐     |
+| Konsola eklenti kaynaklı yeni hata düşmüyor                                                              | ☐     |
+| Atomic commit'ler atıldı, mesajlar dürüst                                                                | ☐     |
+| Push için açık onay alındı                                                                               | ☐     |
 
 ---
 

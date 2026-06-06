@@ -9,6 +9,7 @@ This extension **does not collect, process, or transmit any personal data.** It 
 ## Data not collected
 
 The extension does **not** collect, store, or transmit any of the following data types:
+
 - Personally identifiable information (name, email, phone, address)
 - Authentication information (passwords, session tokens, cookies)
 - Location data
@@ -20,6 +21,7 @@ The extension does **not** collect, store, or transmit any of the following data
 ## Local storage
 
 The only information the extension stores is the user's preferences for blocking features (boolean values). This data:
+
 - Is stored exclusively on the user's device via the `chrome.storage.local` API
 - Is never sent to any server
 - Is never shared with any third party
@@ -28,6 +30,7 @@ The only information the extension stores is the user's preferences for blocking
 ## Permissions
 
 The extension uses only the following permission:
+
 - **`https://www.instagram.com/*` (host permission):** Required for the extension to operate on Instagram web pages and hide Reels and recommended content. The extension accesses only this site, no other.
 
 ## Third parties

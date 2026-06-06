@@ -8,42 +8,42 @@
 
 ## 1. Proje Kimliği (Faz 2 sonu güncel hali)
 
-| Alan | Değer |
-|---|---|
-| Proje adı | **Reels Off** (TR ve EN aynı) |
-| Tür | Chrome + Firefox MV3 tarayıcı eklentisi |
+| Alan              | Değer                                                                                                                                                                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Proje adı         | **Reels Off** (TR ve EN aynı)                                                                                                                                                                                                        |
+| Tür               | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                                                                                                                              |
 | Tek amaç (güncel) | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek kullanıcının dikkat dağıtıcı içeriklere maruz kalmasını azaltır." Faz 2'de **Keşfet (Explore)** açıkça kapsama dahil edildi (algoritmik içerik önerisi). |
-| Sahibi | Kerem Tuna |
-| Telif yılı | 2026 |
-| Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO) |
-| Diller | Türkçe (varsayılan), İngilizce (fallback) |
-| Mevcut faz | **Faz 2 tamamlandı**; sıradaki Faz 3 (URL Redirect — `redirect.js`) |
+| Sahibi            | Kerem Tuna                                                                                                                                                                                                |
+| Telif yılı        | 2026                                                                                                                                                                                                                                 |
+| Hedef mağazalar   | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                                                                                                                             |
+| Diller            | Türkçe (varsayılan), İngilizce (fallback)                                                                                                                                                                                            |
+| Mevcut faz        | **Faz 2 tamamlandı**; sıradaki Faz 3 (URL Redirect — `redirect.js`)                                                                                                                                                                  |
 
 ### Teknik kararlar (Faz 1'den miras, Faz 2'de değişmedi)
 
-| Karar | Sebep |
-|---|---|
-| Vanilla JavaScript | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi |
-| Bundler / minify yok | Web Store reviewer kaynak kodu okur |
-| CSS-first engelleme | Class isimleri yerine href-first seçici |
-| `chrome.storage.local` (sync DEĞİL) | Google sunucularına veri gitmez |
-| CSP sıkı | `script-src 'self'; object-src 'none'; base-uri 'none';` |
-| `host_permissions` tek entry | Sadece `https://www.instagram.com/*` |
-| `permissions` boş | Faz 2 yeni izin gerektirmedi |
-| Build adımı yok | Klasör doğrudan yüklenebilir |
-| Telemetri / analitik | **Hiç** |
+| Karar                               | Sebep                                                    |
+| ----------------------------------- | -------------------------------------------------------- |
+| Vanilla JavaScript                  | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi        |
+| Bundler / minify yok                | Web Store reviewer kaynak kodu okur                      |
+| CSS-first engelleme                 | Class isimleri yerine href-first seçici                  |
+| `chrome.storage.local` (sync DEĞİL) | Google sunucularına veri gitmez                          |
+| CSP sıkı                            | `script-src 'self'; object-src 'none'; base-uri 'none';` |
+| `host_permissions` tek entry        | Sadece `https://www.instagram.com/*`                     |
+| `permissions` boş                   | Faz 2 yeni izin gerektirmedi                             |
+| Build adımı yok                     | Klasör doğrudan yüklenebilir                             |
+| Telemetri / analitik                | **Hiç**                                                  |
 
 ### Faz 2'ye özel mimari kararlar
 
-| Karar | Gerekçe |
-|---|---|
-| **CSS-only, JS yok** | JS = saldırı yüzeyi. Saf CSS, XSS riski sıfır, SPA navigasyonunda otomatik kalıcı. |
-| **href-first seçici** | Instagram class isimleri obfuscated (`x1qjc9v5`, `_aaa1`); href routing kararlı. |
-| **`display: none !important`** | Instagram inline/yüksek-özgüllük stillerini ezmek için zorunlu. |
-| **`:has()` dar anchor** | Performans için; geniş `*:has()` veya `div:has()` yasak. |
-| **Section'lı, yorumlu CSS** | Faz 5'te toggle refactor'u kolaylaşsın diye her hedef ayrı bölümde. |
-| **MutationObserver YOK** | CSS kuralları SPA'da otomatik kalıcı; JS DOM manipülasyonu gereksiz risk. |
-| **Hep aktif (toggle yok)** | Kullanıcı açma/kapama Faz 5 işi (popup + storage gerektirir). |
+| Karar                          | Gerekçe                                                                            |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| **CSS-only, JS yok**           | JS = saldırı yüzeyi. Saf CSS, XSS riski sıfır, SPA navigasyonunda otomatik kalıcı. |
+| **href-first seçici**          | Instagram class isimleri obfuscated (`x1qjc9v5`, `_aaa1`); href routing kararlı.   |
+| **`display: none !important`** | Instagram inline/yüksek-özgüllük stillerini ezmek için zorunlu.                    |
+| **`:has()` dar anchor**        | Performans için; geniş `*:has()` veya `div:has()` yasak.                           |
+| **Section'lı, yorumlu CSS**    | Faz 5'te toggle refactor'u kolaylaşsın diye her hedef ayrı bölümde.                |
+| **MutationObserver YOK**       | CSS kuralları SPA'da otomatik kalıcı; JS DOM manipülasyonu gereksiz risk.          |
+| **Hep aktif (toggle yok)**     | Kullanıcı açma/kapama Faz 5 işi (popup + storage gerektirir).                      |
 
 ---
 
@@ -52,6 +52,7 @@
 `PHASE1_GUIDE.md` Bölüm 9'daki 8 halüsinasyon önleme kuralı (verbatim şablon, placeholder açık bırak, bilmediğin MV3 alanı ekleme, sürüm sorgula, generic policy uzak dur, faz sınırına saygı, şüphede sor, çıktı raporu) Faz 2'de de geçerliydi ve Faz 3+'ta da geçerli.
 
 `PHASE2_GUIDE.md` Bölüm 11'deki Faz 2'ye özel ek kurallar:
+
 - **Kural 9 (kapsam genişlemesi dar tut):** Faz 2 ortasında A2 eklenirken sadece üç ekleme yapıldı (block.css A2 bloğu + scope düzeltmesi, README 2 satır, görsel test bir madde); kapsam dışına çıkılmadı.
 - **Kural 10 (mevcut iş hâlâ önce):** A2 eklenirken G1 doğrulama süreci paralel devam etti.
 
@@ -78,13 +79,13 @@ Toplam commit: 5
 
 ### Commit zinciri (eski → yeni)
 
-| Hash | Mesaj | Kapsam |
-|---|---|---|
-| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load | 4 PNG + `.gitkeep` temizliği |
-| `8c95378` | Move _locales to extension root (Chrome MV3 requires hard-coded path) | `src/_locales/` → `_locales/` rename |
-| `67097a0` | Add Phase 1 Handoff Report for AI Agent Transition | `PHASE1_HANDOFF.md` |
-| `0002e6a` | Add initial project structure and configuration files for Phase 1 | Faz 1 ana iskelet |
-| `638a623` | Add Phase 2 Implementation Guide for CSS Injection and Reels Blocking | `PHASE2_GUIDE.md` |
+| Hash      | Mesaj                                                                  | Kapsam                                                    |
+| --------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| `c1db646` | Add placeholder PNG icons for Phase 1 Chrome load                      | 4 PNG + `.gitkeep` temizliği                              |
+| `8c95378` | Move \_locales to extension root (Chrome MV3 requires hard-coded path) | `src/_locales/` → `_locales/` rename                      |
+| `67097a0` | Add Phase 1 Handoff Report for AI Agent Transition                     | `PHASE1_HANDOFF.md`                                       |
+| `0002e6a` | Add initial project structure and configuration files for Phase 1      | Faz 1 ana iskelet                                         |
+| `638a623` | Add Phase 2 Implementation Guide for CSS Injection and Reels Blocking  | `PHASE2_GUIDE.md`                                         |
 | `ea51773` | **Phase 2: CSS injection for Reels/Explore blocking (A1, A2, D1, G1)** | `README.md` (+2 satır), `src/content/block.css` (+65, -1) |
 
 `ea51773` HEAD'dir ve **origin/main'in 2 commit ilerisindedir** (push edilmedi — kullanıcı onayı bekliyor).
@@ -95,10 +96,10 @@ Toplam commit: 5
 
 ### Faz 2'de DEĞİŞTİRİLEN dosyalar (sadece 2)
 
-| Dosya | Değişiklik | Açıklama |
-|---|---|---|
+| Dosya                   | Değişiklik                       | Açıklama                                                   |
+| ----------------------- | -------------------------------- | ---------------------------------------------------------- |
 | `src/content/block.css` | Placeholder → 4 aktif CSS kuralı | A1, A2, D1, G1 — sayfa header + 4 section header + 4 kural |
-| `README.md` | "Ne yapar" listesine 2 satır | Keşfet sidebar + `/explore/` URL redirect satırları |
+| `README.md`             | "Ne yapar" listesine 2 satır     | Keşfet sidebar + `/explore/` URL redirect satırları        |
 
 ### Faz 2'de DOKUNULMAYAN dosyalar (Faz 1'den aynen kaldı)
 
@@ -112,11 +113,11 @@ Toplam commit: 5
 
 Faz 1'deki tüm kararlar değişmedi (`PHASE1_HANDOFF.md` Bölüm 5). Faz 2'de yeni bir karar verildi:
 
-| Karar | Değer | Bağlam |
-|---|---|---|
-| A2 (Keşfet/Explore) kapsama dahil | EVET | Faz 2 ortasında verildi. "Single purpose statement zaten 'algoritmik içerik önerileri' diyor; Keşfet algoritmik içerik önerisidir." Kapsam genişlemesi değil, kapsam spesifikasyonu. |
-| G1 seçicisinde audio-link filter | EVET (Seçenek A) | Tarayıcı-ajan oturumunda tespit edilen tuzak. Kılavuz Bölüm 6 verbatim'inden sapma; kullanıcı şeffaf rapor sonrası onayladı. |
-| Push zamanlaması | **Henüz onaylanmadı** | Faz 2 commit'i lokal; push için açık onay bekleniyor. |
+| Karar                             | Değer                 | Bağlam                                                                                                                                                                               |
+| --------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A2 (Keşfet/Explore) kapsama dahil | EVET                  | Faz 2 ortasında verildi. "Single purpose statement zaten 'algoritmik içerik önerileri' diyor; Keşfet algoritmik içerik önerisidir." Kapsam genişlemesi değil, kapsam spesifikasyonu. |
+| G1 seçicisinde audio-link filter  | EVET (Seçenek A)      | Tarayıcı-ajan oturumunda tespit edilen tuzak. Kılavuz Bölüm 6 verbatim'inden sapma; kullanıcı şeffaf rapor sonrası onayladı.                                                         |
+| Push zamanlaması                  | **Henüz onaylanmadı** | Faz 2 commit'i lokal; push için açık onay bekleniyor.                                                                                                                                |
 
 ---
 
@@ -141,22 +142,22 @@ Faz 1'deki tüm kararlar değişmedi (`PHASE1_HANDOFF.md` Bölüm 5). Faz 2'de y
  */
 
 /* A1 — Sol kenar çubuğu Reels linki */
-a[href="/reels/"] {
+a[href='/reels/'] {
   display: none !important;
 }
 
 /* A2 — Sol kenar çubuğu Keşfet linki */
-a[href="/explore/"] {
+a[href='/explore/'] {
   display: none !important;
 }
 
 /* D1 — Profil sayfası Reels sekmesi */
-main a[href$="/reels/"]:not([href="/reels/"]) {
+main a[href$='/reels/']:not([href='/reels/']) {
   display: none !important;
 }
 
 /* G1 — Feed'e gömülü tekil Reel gönderileri (audio-link false-positive guard'lı) */
-article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+article:has(a[href^='/reels/']:not([href='/reels/']):not([href^='/reels/audio/'])) {
   display: none !important;
 }
 ```
@@ -165,12 +166,12 @@ article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"]
 
 ### Hedef seçicilerin gerekçesi (özet)
 
-| ID | Seçici | Gerekçe |
-|----|--------|---------|
-| A1 | `a[href="/reels/"]` | Tam eşleme; sidebar Reels linki tam `/reels/`. Feed reel'leri `/reels/<id>/` formatında olduğundan hariç. |
-| A2 | `a[href="/explore/"]` | Tam eşleme; sidebar Keşfet linki tam `/explore/`. `/explore/locations/`, `/explore/tags/<tag>/` gibi alt yollar hariç (Faz 3'te URL redirect'te ayrı işlenecek). |
-| D1 | `main a[href$="/reels/"]:not([href="/reels/"])` | `main` içinde `/<username>/reels/` ile biten link; sidebar `/reels/` hariç. Profil tab'ları `role="link"` + `aria-selected` hibrit yapı kullanır (`role="tab"` DEĞİL), bu yüzden href suffix ile hedeflendi. |
-| G1 | `article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"]))` | Post-seviyesi `<article>` container; reel post linki içerenleri gizle. **Audio filter:** IG bazı foto post'larda şarkı atfı için `/reels/audio/<id>/` linki kullanır; bu filter o foto post'ların yanlışlıkla gizlenmesini önler. |
+| ID  | Seçici                                                                               | Gerekçe                                                                                                                                                                                                                           |
+| --- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | `a[href="/reels/"]`                                                                  | Tam eşleme; sidebar Reels linki tam `/reels/`. Feed reel'leri `/reels/<id>/` formatında olduğundan hariç.                                                                                                                         |
+| A2  | `a[href="/explore/"]`                                                                | Tam eşleme; sidebar Keşfet linki tam `/explore/`. `/explore/locations/`, `/explore/tags/<tag>/` gibi alt yollar hariç (Faz 3'te URL redirect'te ayrı işlenecek).                                                                  |
+| D1  | `main a[href$="/reels/"]:not([href="/reels/"])`                                      | `main` içinde `/<username>/reels/` ile biten link; sidebar `/reels/` hariç. Profil tab'ları `role="link"` + `aria-selected` hibrit yapı kullanır (`role="tab"` DEĞİL), bu yüzden href suffix ile hedeflendi.                      |
+| G1  | `article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"]))` | Post-seviyesi `<article>` container; reel post linki içerenleri gizle. **Audio filter:** IG bazı foto post'larda şarkı atfı için `/reels/audio/<id>/` linki kullanır; bu filter o foto post'ların yanlışlıkla gizlenmesini önler. |
 
 ---
 
@@ -226,18 +227,18 @@ Bu pattern Faz 3'te `redirect.js`'in URL yakalama seçicilerini doğrularken ayn
 
 Test ortamı: Chrome (kullanıcının ana tarayıcısı), kullanıcının kendi IG hesabı, kontrollü oturum.
 
-| Madde | Sonuç |
-|---|---|
-| A1 — Sidebar Reels linki kayboldu | ✓ |
-| A2 — Sidebar Keşfet linki kayboldu | ✓ |
-| D1 — Kendi profilde + `instagram.com/instagram/` Reels sekmesi gizli | ✓ (son kontrol 2026-05-31) |
-| G1 — "Senin için" feed'de reel post'lar gizli | ✓ |
-| G1 — Normal foto/video post'lar görünür | ✓ |
-| G1 — Müzik etiketli foto post'lar görünür (audio filter doğrulaması) | ✓ |
-| Genel — Hiçbir sayfa beyaz/boş değil | ✓ |
-| Genel — DM, Story, arama, profil normal | ✓ |
-| Genel — Eklenti kapatılınca her şey eski hâline dönüyor (geri-alınabilirlik) | ✓ (son kontrol 2026-05-31) |
-| Genel — Console eklenti kaynaklı hata yok | ✓ (17 hata IG/diğer eklentilerden, analiz edildi) |
+| Madde                                                                        | Sonuç                                             |
+| ---------------------------------------------------------------------------- | ------------------------------------------------- |
+| A1 — Sidebar Reels linki kayboldu                                            | ✓                                                 |
+| A2 — Sidebar Keşfet linki kayboldu                                           | ✓                                                 |
+| D1 — Kendi profilde + `instagram.com/instagram/` Reels sekmesi gizli         | ✓ (son kontrol 2026-05-31)                        |
+| G1 — "Senin için" feed'de reel post'lar gizli                                | ✓                                                 |
+| G1 — Normal foto/video post'lar görünür                                      | ✓                                                 |
+| G1 — Müzik etiketli foto post'lar görünür (audio filter doğrulaması)         | ✓                                                 |
+| Genel — Hiçbir sayfa beyaz/boş değil                                         | ✓                                                 |
+| Genel — DM, Story, arama, profil normal                                      | ✓                                                 |
+| Genel — Eklenti kapatılınca her şey eski hâline dönüyor (geri-alınabilirlik) | ✓ (son kontrol 2026-05-31)                        |
+| Genel — Console eklenti kaynaklı hata yok                                    | ✓ (17 hata IG/diğer eklentilerden, analiz edildi) |
 
 ### Console hatalarının kaynağı (kullanıcı 17 hata bildirdi)
 
@@ -253,20 +254,20 @@ Test ortamı: Chrome (kullanıcının ana tarayıcısı), kullanıcının kendi 
 
 ## 10. Faz 2 Tamamlandı Şartları (PHASE2_GUIDE.md Bölüm 12)
 
-| Şart | Durum |
-|---|---|
-| `src/content/block.css` Bölüm 6 şablonuyla dolduruldu | ✅ |
-| A1 ve D1 kuralları aktif, doğru href-first seçiciler | ✅ |
-| G1 doğrulanıp aktive edildi, durum net raporlandı | ✅ (2026-05-28 ata zinciri + 2026-05-31 controlled scroll) |
-| Hiçbir class-name (obfuscated) seçici yok | ✅ |
-| Tüm aktif kurallar `display: none !important` | ✅ (4 kural, grep ile teyit) |
-| `@import`, `url()`, inline style yok | ✅ (grep ile teyit) |
-| `manifest.json`, `redirect.js`, `_locales/`, popup dosyaları DEĞİŞMEDİ | ✅ (`git diff` boş) |
-| Görsel test (Bölüm 9) yapıldı ve geçti | ✅ |
-| Eklenti devre dışı bırakılınca Instagram normale dönüyor | ✅ |
-| Konsola eklenti kaynaklı hata düşmüyor | ✅ |
-| Commit atıldı | ✅ `ea51773` |
-| Push için kullanıcı onayı alındı | ⏳ **Beklemede** — kullanıcı onayı sonrası `git push origin main` |
+| Şart                                                                   | Durum                                                             |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `src/content/block.css` Bölüm 6 şablonuyla dolduruldu                  | ✅                                                                |
+| A1 ve D1 kuralları aktif, doğru href-first seçiciler                   | ✅                                                                |
+| G1 doğrulanıp aktive edildi, durum net raporlandı                      | ✅ (2026-05-28 ata zinciri + 2026-05-31 controlled scroll)        |
+| Hiçbir class-name (obfuscated) seçici yok                              | ✅                                                                |
+| Tüm aktif kurallar `display: none !important`                          | ✅ (4 kural, grep ile teyit)                                      |
+| `@import`, `url()`, inline style yok                                   | ✅ (grep ile teyit)                                               |
+| `manifest.json`, `redirect.js`, `_locales/`, popup dosyaları DEĞİŞMEDİ | ✅ (`git diff` boş)                                               |
+| Görsel test (Bölüm 9) yapıldı ve geçti                                 | ✅                                                                |
+| Eklenti devre dışı bırakılınca Instagram normale dönüyor               | ✅                                                                |
+| Konsola eklenti kaynaklı hata düşmüyor                                 | ✅                                                                |
+| Commit atıldı                                                          | ✅ `ea51773`                                                      |
+| Push için kullanıcı onayı alındı                                       | ⏳ **Beklemede** — kullanıcı onayı sonrası `git push origin main` |
 
 **Bonus (kapsam dışıydı, Faz 2 ortasında karar):** A2 (Keşfet) eklendi.
 
@@ -348,26 +349,27 @@ git log origin/main..HEAD --oneline        # 2 commit listelenmeli: 638a623, ea5
 
 ## 13. Açık Konular / Henüz Yapılmadıklar
 
-| Konu | Faz | Not |
-|---|---|---|
-| Faz 2 push | Faz 2 son adım | Kullanıcı onayı bekleniyor |
-| `redirect.js` doldurma | Faz 3 | Kılavuz henüz yok |
-| Popup UI + toggle'lar | Faz 5 | A1/A2/D1/G1 kuralları "her zaman aktif"; Faz 5'te kullanıcı kontrolüne geçecek |
-| `chrome.storage.local` entegrasyonu | Faz 5 | Kullanıcı tercihlerini saklamak için |
-| Gerçek ikon tasarımları | Faz 10 | Placeholder PNG'ler hâlâ kullanımda |
-| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Faz 2'de de getirilmedi |
-| `package.json` (devDependencies için) | Opsiyonel | Sadece kullanıcı isterse |
-| Test infrastructure | Faz 10 | Henüz yok |
-| CI/CD (GitHub Actions) | Faz 13 | Yok |
-| AMO / Web Store submission | Faz 13 | Yok |
-| Eklenti versiyonu | `0.1.0` | Faz 13 öncesi bump kararı kullanıcıda |
-| G1 uzun-vade DOM stability | Faz 5+ | IG redesign sürecinde; periyodik MutationObserver tabanlı yeniden değerlendirme önerisi var (Faz 5 sonrası) |
+| Konu                                          | Faz                  | Not                                                                                                         |
+| --------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Faz 2 push                                    | Faz 2 son adım       | Kullanıcı onayı bekleniyor                                                                                  |
+| `redirect.js` doldurma                        | Faz 3                | Kılavuz henüz yok                                                                                           |
+| Popup UI + toggle'lar                         | Faz 5                | A1/A2/D1/G1 kuralları "her zaman aktif"; Faz 5'te kullanıcı kontrolüne geçecek                              |
+| `chrome.storage.local` entegrasyonu           | Faz 5                | Kullanıcı tercihlerini saklamak için                                                                        |
+| Gerçek ikon tasarımları                       | Faz 10               | Placeholder PNG'ler hâlâ kullanımda                                                                         |
+| `docs/selectors.md` ve `docs/threat-model.md` | Faz 0 (kullanıcıdan) | Faz 2'de de getirilmedi                                                                                     |
+| `package.json` (devDependencies için)         | Opsiyonel            | Sadece kullanıcı isterse                                                                                    |
+| Test infrastructure                           | Faz 10               | Henüz yok                                                                                                   |
+| CI/CD (GitHub Actions)                        | Faz 13               | Yok                                                                                                         |
+| AMO / Web Store submission                    | Faz 13               | Yok                                                                                                         |
+| Eklenti versiyonu                             | `0.1.0`              | Faz 13 öncesi bump kararı kullanıcıda                                                                       |
+| G1 uzun-vade DOM stability                    | Faz 5+               | IG redesign sürecinde; periyodik MutationObserver tabanlı yeniden değerlendirme önerisi var (Faz 5 sonrası) |
 
 ---
 
 ## 14. Bu Belgeyi Okuyan Ajan'a Son Söz
 
 Faz 2 üç alt-aşamadan geçti:
+
 1. **Statik kısım (A1, D1):** Kılavuz şablonu birebir uygulandı.
 2. **Genişletme (A2):** Faz ortasında kullanıcı kararı; Kural 9 (kapsam dar) sıkı uygulandı — sadece üç dosya satırı eklendi.
 3. **Belirsizlik (G1):** Tarayıcı-ajan oturumuyla doğrulandı, audio-filter sapması şeffaf raporlandı, ikinci diagnostic oturumuyla "flicker" gözlemi IG virtualization'a atfedildi.

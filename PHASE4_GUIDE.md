@@ -10,7 +10,7 @@
 
 ## 0. Bu Dokümanı Nasıl Kullanmalısın
 
-1. **Bölüm 1**'i mutlaka oku — Faz 1-3'ten gelen 3 sapma kaydı korunmalı (özellikle G1 audio-filter ve _locales kök konumu).
+1. **Bölüm 1**'i mutlaka oku — Faz 1-3'ten gelen 3 sapma kaydı korunmalı (özellikle G1 audio-filter ve \_locales kök konumu).
 2. **Bölüm 2**'deki kapsam sınırlarını içselleştir. Faz 4 birden fazla dosyaya dokunuyor — bu Faz 1-3'e göre yüksek karmaşıklık. Bu yüzden **görev sıralaması** (Bölüm 5) çok önemli; sırayı bozma.
 3. **Bölüm 4 (Storage Schema) ve Bölüm 8 (Cold-Read Race)** mimari karar bölümleri — implementasyon öncesi anlaman gerekiyor.
 4. Görevleri (Bölüm 5) **sıralı** yap. Her görev sonrası doğrulama. Faz 1-3'teki dört kontrol noktası akışı burada da işliyor.
@@ -35,27 +35,27 @@ Toplam commit: 10
 
 Faz 4 refactor'ü sırasında bu üç karar **bozulmamalı**:
 
-| # | Sapma | Kaynak | Faz 4 etkisi |
-|---|-------|--------|--------------|
-| 1 | `_locales/` kök seviyede (`src/_locales/` DEĞİL) | Faz 1, commit `8c95378` | Faz 4 locale genişletecek; yeni key'ler kök `_locales/tr/messages.json` ve `_locales/en/messages.json`'a |
-| 2 | G1 seçicisinde `:not([href^="/reels/audio/"])` audio-link filter | Faz 2, commit `ea51773` | block.css refactor sırasında G1 kuralındaki audio-filter **AYNEN korunacak** — kaybolursa müzik etiketli foto post'lar yanlışlıkla gizlenir |
-| 3 | İki katmanlı loop guard + regex sıralaması (F1a/b → E1 → F1c) | Faz 3, commit `9a34bd5` | redirect.js refactor sırasında loop guard ve regex sırası **AYNEN korunacak** |
+| #   | Sapma                                                            | Kaynak                  | Faz 4 etkisi                                                                                                                                |
+| --- | ---------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `_locales/` kök seviyede (`src/_locales/` DEĞİL)                 | Faz 1, commit `8c95378` | Faz 4 locale genişletecek; yeni key'ler kök `_locales/tr/messages.json` ve `_locales/en/messages.json`'a                                    |
+| 2   | G1 seçicisinde `:not([href^="/reels/audio/"])` audio-link filter | Faz 2, commit `ea51773` | block.css refactor sırasında G1 kuralındaki audio-filter **AYNEN korunacak** — kaybolursa müzik etiketli foto post'lar yanlışlıkla gizlenir |
+| 3   | İki katmanlı loop guard + regex sıralaması (F1a/b → E1 → F1c)    | Faz 3, commit `9a34bd5` | redirect.js refactor sırasında loop guard ve regex sırası **AYNEN korunacak**                                                               |
 
 ### 1.3 — Mevcut Dosya Durumu (Faz 4'ün üzerine kuracağı zemin)
 
 **Faz 4'ün dokunacağı dosyalar:**
 
-| Dosya | Mevcut hal | Faz 4'te ne olacak |
-|-------|-----------|--------------------|
-| `manifest.json` | `permissions` alanı yok | **`"permissions": ["storage"]` eklenecek** |
-| `src/content/block.css` | Faz 2 (4 kural, hep aktif) | Her kurala **override (CSS class gate)** eklenecek; mevcut kurallar değişmez |
-| `src/content/redirect.js` | Faz 3 (3 URL pattern, hep aktif) | **Settings okuma + onChanged listener + CSS class toggler** eklenecek; mevcut redirect mantığı değişmez |
-| `src/popup/popup.html` | Boş boilerplate | **7 toggle içeren popup UI** |
-| `src/popup/popup.css` | Placeholder | **Popup stil dosyası** |
-| `src/popup/popup.js` | Placeholder | **i18n + storage toggle wiring** |
-| `_locales/tr/messages.json` | 2 key (`extName`, `extDescription`) | **+11 yeni key** (popup metinleri) |
-| `_locales/en/messages.json` | 2 key | **+11 yeni key** (İngilizce karşılıkları) |
-| `README.md` | "Mevcut durum: Faz 3" | **"Mevcut durum: Faz 4 (Kullanıcı kontrolü ve ayarlar)"** |
+| Dosya                       | Mevcut hal                          | Faz 4'te ne olacak                                                                                      |
+| --------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `manifest.json`             | `permissions` alanı yok             | **`"permissions": ["storage"]` eklenecek**                                                              |
+| `src/content/block.css`     | Faz 2 (4 kural, hep aktif)          | Her kurala **override (CSS class gate)** eklenecek; mevcut kurallar değişmez                            |
+| `src/content/redirect.js`   | Faz 3 (3 URL pattern, hep aktif)    | **Settings okuma + onChanged listener + CSS class toggler** eklenecek; mevcut redirect mantığı değişmez |
+| `src/popup/popup.html`      | Boş boilerplate                     | **7 toggle içeren popup UI**                                                                            |
+| `src/popup/popup.css`       | Placeholder                         | **Popup stil dosyası**                                                                                  |
+| `src/popup/popup.js`        | Placeholder                         | **i18n + storage toggle wiring**                                                                        |
+| `_locales/tr/messages.json` | 2 key (`extName`, `extDescription`) | **+11 yeni key** (popup metinleri)                                                                      |
+| `_locales/en/messages.json` | 2 key                               | **+11 yeni key** (İngilizce karşılıkları)                                                               |
+| `README.md`                 | "Mevcut durum: Faz 3"               | **"Mevcut durum: Faz 4 (Kullanıcı kontrolü ve ayarlar)"**                                               |
 
 **Faz 4'ün DOKUNMAYACAĞI dosyalar (Faz 1-3'ten aynen kalır):**
 `LICENSE`, `PRIVACY-TR.md`, `PRIVACY-EN.md`, `.gitignore`, `.eslintrc.json`, `.prettierrc.json`, ikonlar (`src/icons/*`), `docs/.gitkeep`, tüm `PHASE*_GUIDE.md` ve `PHASE*_HANDOFF.md` dosyaları.
@@ -79,42 +79,42 @@ Tüm toggle'lar **default ON** (engelleme aktif). Kullanıcı kapatabilir, varsa
 
 ### 2.2 — Faz 4'te YAPILMAYACAK (Önemli Sınırlar)
 
-| Yapma | Sebep |
-|-------|-------|
-| ❌ `chrome.storage.sync` kullanmak | `local` kullanılacak — Google sunucularına veri gitmez (Faz 1 mimari kararı) |
-| ❌ Yeni permission eklemek (`storage` dışında) | `webNavigation`, `tabs`, `scripting`, `notifications` — hiçbiri gerekmez |
-| ❌ Mevcut block.css/redirect.js kurallarını silmek | Refactor = override **eklemek**, mevcut kuralları değiştirmemek. Mevcut Faz 2-3 davranışı default davranıştır |
-| ❌ G1 audio-filter'ı kaldırmak veya değiştirmek | Faz 2 Sapma 2 — kaybolursa regression |
-| ❌ Loop guard veya regex sıralamasını "iyileştirmek" | Faz 3 Kural 13 ve 15 |
-| ❌ `location.replace` dışına çıkmak | Faz 3 Kural 14 |
-| ❌ Polling parametrelerini (`300`, `1000`) değiştirmek | Faz 3 Kural 11 |
-| ❌ Popup'ta inline `<script>` veya `onclick="..."` | CSP `script-src 'self'` — strict mode |
-| ❌ Popup'ta external font, CDN, image | CSP + privacy: hiçbir dış kaynak |
-| ❌ Service worker eklemek | Faz 4'te gerekmez — content script ve popup arası storage event ile iletişim kuruyor |
-| ❌ Mesajlaşma API'si (`chrome.runtime.sendMessage`) | Storage + `onChanged` listener yeterli; mesajlaşma gereksiz katman |
-| ❌ Build pipeline (Webpack, Vite, vb.) | Vanilla, MV3 raw klasör yükleniyor |
-| ❌ TypeScript, React, Vue, jQuery, vb. | Faz 1 mimari kararı |
-| ❌ Test framework (Jest, Vitest, vb.) | Faz 13 işi |
-| ❌ Renaming files (örn. `redirect.js` → `content-main.js`) | Manifest dependency'leri kırar; ad-içerik uyumsuzluğu yorum ile çözüldü |
-| ❌ Toggle'lara animation, gradient, glassmorphism, vs. | Minimal UI; over-engineering yasak |
+| Yapma                                                      | Sebep                                                                                                         |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ❌ `chrome.storage.sync` kullanmak                         | `local` kullanılacak — Google sunucularına veri gitmez (Faz 1 mimari kararı)                                  |
+| ❌ Yeni permission eklemek (`storage` dışında)             | `webNavigation`, `tabs`, `scripting`, `notifications` — hiçbiri gerekmez                                      |
+| ❌ Mevcut block.css/redirect.js kurallarını silmek         | Refactor = override **eklemek**, mevcut kuralları değiştirmemek. Mevcut Faz 2-3 davranışı default davranıştır |
+| ❌ G1 audio-filter'ı kaldırmak veya değiştirmek            | Faz 2 Sapma 2 — kaybolursa regression                                                                         |
+| ❌ Loop guard veya regex sıralamasını "iyileştirmek"       | Faz 3 Kural 13 ve 15                                                                                          |
+| ❌ `location.replace` dışına çıkmak                        | Faz 3 Kural 14                                                                                                |
+| ❌ Polling parametrelerini (`300`, `1000`) değiştirmek     | Faz 3 Kural 11                                                                                                |
+| ❌ Popup'ta inline `<script>` veya `onclick="..."`         | CSP `script-src 'self'` — strict mode                                                                         |
+| ❌ Popup'ta external font, CDN, image                      | CSP + privacy: hiçbir dış kaynak                                                                              |
+| ❌ Service worker eklemek                                  | Faz 4'te gerekmez — content script ve popup arası storage event ile iletişim kuruyor                          |
+| ❌ Mesajlaşma API'si (`chrome.runtime.sendMessage`)        | Storage + `onChanged` listener yeterli; mesajlaşma gereksiz katman                                            |
+| ❌ Build pipeline (Webpack, Vite, vb.)                     | Vanilla, MV3 raw klasör yükleniyor                                                                            |
+| ❌ TypeScript, React, Vue, jQuery, vb.                     | Faz 1 mimari kararı                                                                                           |
+| ❌ Test framework (Jest, Vitest, vb.)                      | Faz 13 işi                                                                                                    |
+| ❌ Renaming files (örn. `redirect.js` → `content-main.js`) | Manifest dependency'leri kırar; ad-içerik uyumsuzluğu yorum ile çözüldü                                       |
+| ❌ Toggle'lara animation, gradient, glassmorphism, vs.     | Minimal UI; over-engineering yasak                                                                            |
 
 ---
 
 ## 3. Mimari Kararlar
 
-| Karar | Gerekçe |
-|-------|---------|
-| **`chrome.storage.local`** | sync DEĞİL — veri Google'a gitmez (Faz 1 mimari). Privacy policy uyumu. |
-| **Flat boolean schema** | İç içe yapı yerine düz key'ler. `chrome.storage` API basit kullanım için optimize. `schemaVersion: 1` ile gelecek migration hazırlığı. |
-| **Default-true policy** | Tüm 7 toggle default `true`. Kurulumda eklenti tam aktif (Faz 2-3 davranışı). Kullanıcı sadece kapatabilir. |
-| **CSS-default-block + class override** | block.css default'ta her şeyi engeller (`display: none !important`). Kullanıcı bir toggle'ı kapatınca `<html>`'e class eklenir, override kuralı (`display: revert !important`) çalışır. **Flicker yok** çünkü default = engelleme. |
-| **`display: revert !important`** | UA stylesheet default'una döner. Baseline 2020, hedef tarayıcılarımızda tam destek. Specificity gate (`html.ro-disable-X`) sayesinde `!important`'i ezer. |
-| **Single content script (redirect.js genişletilir)** | Yeni dosya eklemek = manifest değişikliği = risk. Mevcut redirect.js sorumluluğu genişletilir; yorumlarla belgelenir. |
-| **Settings cold-read race: defaults-aktif** | Storage async; gelene kadar `settings = DEFAULTS` (her şey aktif). Race penceresi (~5-10ms) içinde davranış = Faz 2-3 davranışı = güvenli. |
-| **`chrome.storage.onChanged` listener** | Popup'tan toggle değiştiğinde content script canlı uyum sağlar — kullanıcı popup'ı kapatmadan değişiklik görebilir. Mesajlaşma API'si gereksiz. |
-| **Popup CSP-strict (inline yok)** | `script-src 'self'` zaten ayarlı. `data-i18n` attribute + JS replacement pattern; `data-key` attribute + JS event binding. |
-| **i18n: JS-side replacement** | HTML'de `__MSG_*__` syntax yalnızca manifest ve CSS'te çalışır. Popup HTML'de `data-i18n` attribute'ları, popup.js bunları `chrome.i18n.getMessage()` ile dolduruyor. |
-| **Tek storage paneli (popup, options sayfası yok)** | Sadelik. 7 toggle bir popup'a sığar. Faz 13+ için options sayfası düşünülebilir. |
+| Karar                                                | Gerekçe                                                                                                                                                                                                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`chrome.storage.local`**                           | sync DEĞİL — veri Google'a gitmez (Faz 1 mimari). Privacy policy uyumu.                                                                                                                                                            |
+| **Flat boolean schema**                              | İç içe yapı yerine düz key'ler. `chrome.storage` API basit kullanım için optimize. `schemaVersion: 1` ile gelecek migration hazırlığı.                                                                                             |
+| **Default-true policy**                              | Tüm 7 toggle default `true`. Kurulumda eklenti tam aktif (Faz 2-3 davranışı). Kullanıcı sadece kapatabilir.                                                                                                                        |
+| **CSS-default-block + class override**               | block.css default'ta her şeyi engeller (`display: none !important`). Kullanıcı bir toggle'ı kapatınca `<html>`'e class eklenir, override kuralı (`display: revert !important`) çalışır. **Flicker yok** çünkü default = engelleme. |
+| **`display: revert !important`**                     | UA stylesheet default'una döner. Baseline 2020, hedef tarayıcılarımızda tam destek. Specificity gate (`html.ro-disable-X`) sayesinde `!important`'i ezer.                                                                          |
+| **Single content script (redirect.js genişletilir)** | Yeni dosya eklemek = manifest değişikliği = risk. Mevcut redirect.js sorumluluğu genişletilir; yorumlarla belgelenir.                                                                                                              |
+| **Settings cold-read race: defaults-aktif**          | Storage async; gelene kadar `settings = DEFAULTS` (her şey aktif). Race penceresi (~5-10ms) içinde davranış = Faz 2-3 davranışı = güvenli.                                                                                         |
+| **`chrome.storage.onChanged` listener**              | Popup'tan toggle değiştiğinde content script canlı uyum sağlar — kullanıcı popup'ı kapatmadan değişiklik görebilir. Mesajlaşma API'si gereksiz.                                                                                    |
+| **Popup CSP-strict (inline yok)**                    | `script-src 'self'` zaten ayarlı. `data-i18n` attribute + JS replacement pattern; `data-key` attribute + JS event binding.                                                                                                         |
+| **i18n: JS-side replacement**                        | HTML'de `__MSG_*__` syntax yalnızca manifest ve CSS'te çalışır. Popup HTML'de `data-i18n` attribute'ları, popup.js bunları `chrome.i18n.getMessage()` ile dolduruyor.                                                              |
+| **Tek storage paneli (popup, options sayfası yok)**  | Sadelik. 7 toggle bir popup'a sığar. Faz 13+ için options sayfası düşünülebilir.                                                                                                                                                   |
 
 ---
 
@@ -125,13 +125,13 @@ Tüm toggle'lar **default ON** (engelleme aktif). Kullanıcı kapatabilir, varsa
 ```javascript
 const DEFAULTS = {
   schemaVersion: 1,
-  blockSidebarReels: true,       // A1 — Sidebar Reels link CSS
-  blockSidebarExplore: true,     // A2 — Sidebar Keşfet link CSS
-  blockProfileReelsTab: true,    // D1 — Profil Reels sekmesi CSS
-  blockFeedReelPosts: true,      // G1 — Feed reel post container CSS
-  redirectReels: true,           // F1a/F1b — /reels/* redirect JS
-  redirectExplore: true,         // E1 — /explore/* redirect JS
-  redirectProfileReels: true,    // F1c — /<user>/reels/ redirect JS
+  blockSidebarReels: true, // A1 — Sidebar Reels link CSS
+  blockSidebarExplore: true, // A2 — Sidebar Keşfet link CSS
+  blockProfileReelsTab: true, // D1 — Profil Reels sekmesi CSS
+  blockFeedReelPosts: true, // G1 — Feed reel post container CSS
+  redirectReels: true, // F1a/F1b — /reels/* redirect JS
+  redirectExplore: true, // E1 — /explore/* redirect JS
+  redirectProfileReels: true, // F1c — /<user>/reels/ redirect JS
 };
 ```
 
@@ -159,7 +159,9 @@ Faz 4'te kullanılmıyor (= 1, sabit). Ama ileride yapı değişirse (yeni toggl
 Görev sırası mimari sebeple bu — değiştirme.
 
 ### Görev 5.1 — Mevcut state'i doğrula
+
 Repo'ya girince Faz 3 state'inin bozulmadığını teyit et (Bölüm 10 komutları):
+
 - `git log --oneline` → HEAD = `9a34bd5` ?
 - `git status` clean mi?
 - `manifest.json`'da `permissions` alanı **yok** mu (Faz 3 henüz eklemedi)?
@@ -169,6 +171,7 @@ Repo'ya girince Faz 3 state'inin bozulmadığını teyit et (Bölüm 10 komutlar
 Tutarsızlık görürsen DUR, kullanıcıya bildir.
 
 ### Görev 5.2 — Manifest'e `storage` izni ekle
+
 **Sadece tek satır eklenecek.** Mevcut `host_permissions` korunur. Yeni `permissions` alanı eklenir:
 
 ```json
@@ -184,31 +187,41 @@ Tutarsızlık görürsen DUR, kullanıcıya bildir.
 Yer: `host_permissions` ve `content_scripts` arasına. Alfabetik sıra zorunlu değil ama manifest okunabilirliği için bu konum mantıklı.
 
 ### Görev 5.3 — `_locales/tr/messages.json` ve `_locales/en/messages.json` genişlet
+
 11 yeni key (Bölüm 6.2 ve 6.3'teki şablon). Mevcut 2 key (`extName`, `extDescription`) korunur, sonuna eklenecek.
 
 ### Görev 5.4 — `block.css` refactor
+
 Mevcut 4 kuralın her birine bir **override** ekle. Mevcut kuralları SİLME, sadece ekleme yap. Şablon Bölüm 6.4'te.
 
 ### Görev 5.5 — `redirect.js` refactor
+
 Mevcut polling mantığı korunur. Üstüne settings okuma + onChanged listener + `applyBlockingClasses()` fonksiyonu eklenir. `computeRedirect()` settings flag'lerini kullanacak şekilde değişir. Şablon Bölüm 6.5'te.
 
 ### Görev 5.6 — `popup.html` yaz
+
 Bölüm 6.6 şablonu birebir.
 
 ### Görev 5.7 — `popup.css` yaz
+
 Bölüm 6.7 şablonu birebir.
 
 ### Görev 5.8 — `popup.js` yaz
+
 Bölüm 6.8 şablonu birebir.
 
 ### Görev 5.9 — `README.md` "Mevcut durum" güncelle
+
 Tek satır: `Faz 3 (URL yönlendirme)` → `Faz 4 (Kullanıcı kontrolü ve ayarlar)`. Bölüm 13.
 
 ### Görev 5.10 — Görsel test (kullanıcı yapar)
+
 Bölüm 9 checklist. Test geçmeden commit etme.
 
 ### Görev 5.11 — Commit + push
+
 Tüm testler geçince:
+
 ```bash
 git add manifest.json _locales/ src/content/block.css src/content/redirect.js src/popup/ README.md
 git commit -m "Phase 4: Popup UI with toggles and chrome.storage.local integration"
@@ -391,10 +404,10 @@ Mevcut manifest'in **şu kısmı** değişecek (`host_permissions`'tan hemen son
  *   Feed reel post'ları /reels/<id>/ formatında olduğundan hariç kalır.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-a[href="/reels/"] {
+a[href='/reels/'] {
   display: none !important;
 }
-html.ro-disable-sidebar-reels a[href="/reels/"] {
+html.ro-disable-sidebar-reels a[href='/reels/'] {
   display: revert !important;
 }
 
@@ -404,10 +417,10 @@ html.ro-disable-sidebar-reels a[href="/reels/"] {
  *   /explore/locations/, /explore/search/ gibi alt yollar hariç kalır.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-a[href="/explore/"] {
+a[href='/explore/'] {
   display: none !important;
 }
-html.ro-disable-sidebar-explore a[href="/explore/"] {
+html.ro-disable-sidebar-explore a[href='/explore/'] {
   display: revert !important;
 }
 
@@ -419,10 +432,10 @@ html.ro-disable-sidebar-explore a[href="/explore/"] {
  *   (role="tab" DEĞİL), bu yüzden href suffix ile hedefleniyor.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-main a[href$="/reels/"]:not([href="/reels/"]) {
+main a[href$='/reels/']:not([href='/reels/']) {
   display: none !important;
 }
-html.ro-disable-profile-reels-tab main a[href$="/reels/"]:not([href="/reels/"]) {
+html.ro-disable-profile-reels-tab main a[href$='/reels/']:not([href='/reels/']) {
   display: revert !important;
 }
 
@@ -434,10 +447,11 @@ html.ro-disable-profile-reels-tab main a[href$="/reels/"]:not([href="/reels/"]) 
  * Performans notu: :has() anchor'ı (article) dar; uyarı yok.
  * Güven: Yüksek (canlı doğrulandı)
  * ------------------------------------------------------------------------- */
-article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+article:has(a[href^='/reels/']:not([href='/reels/']):not([href^='/reels/audio/'])) {
   display: none !important;
 }
-html.ro-disable-feed-reel-posts article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+html.ro-disable-feed-reel-posts
+  article:has(a[href^='/reels/']:not([href='/reels/']):not([href^='/reels/audio/'])) {
   display: revert !important;
 }
 ```
@@ -566,59 +580,60 @@ html.ro-disable-feed-reel-posts article:has(a[href^="/reels/"]:not([href="/reels
 ```html
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="popup.css">
-  <title data-i18n="popupTitle"></title>
-</head>
-<body>
-  <header>
-    <h1 data-i18n="popupTitle"></h1>
-    <p data-i18n="popupSubtitle"></p>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <title data-i18n="popupTitle"></title>
+  </head>
+  <body>
+    <header>
+      <h1 data-i18n="popupTitle"></h1>
+      <p data-i18n="popupSubtitle"></p>
+    </header>
 
-  <section>
-    <h2 data-i18n="categoryHide"></h2>
-    <label class="toggle">
-      <input type="checkbox" data-key="blockSidebarReels">
-      <span data-i18n="toggleSidebarReels"></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" data-key="blockSidebarExplore">
-      <span data-i18n="toggleSidebarExplore"></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" data-key="blockProfileReelsTab">
-      <span data-i18n="toggleProfileReelsTab"></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" data-key="blockFeedReelPosts">
-      <span data-i18n="toggleFeedReelPosts"></span>
-    </label>
-  </section>
+    <section>
+      <h2 data-i18n="categoryHide"></h2>
+      <label class="toggle">
+        <input type="checkbox" data-key="blockSidebarReels" />
+        <span data-i18n="toggleSidebarReels"></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" data-key="blockSidebarExplore" />
+        <span data-i18n="toggleSidebarExplore"></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" data-key="blockProfileReelsTab" />
+        <span data-i18n="toggleProfileReelsTab"></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" data-key="blockFeedReelPosts" />
+        <span data-i18n="toggleFeedReelPosts"></span>
+      </label>
+    </section>
 
-  <section>
-    <h2 data-i18n="categoryRedirect"></h2>
-    <label class="toggle">
-      <input type="checkbox" data-key="redirectReels">
-      <span data-i18n="toggleRedirectReels"></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" data-key="redirectExplore">
-      <span data-i18n="toggleRedirectExplore"></span>
-    </label>
-    <label class="toggle">
-      <input type="checkbox" data-key="redirectProfileReels">
-      <span data-i18n="toggleRedirectProfileReels"></span>
-    </label>
-  </section>
+    <section>
+      <h2 data-i18n="categoryRedirect"></h2>
+      <label class="toggle">
+        <input type="checkbox" data-key="redirectReels" />
+        <span data-i18n="toggleRedirectReels"></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" data-key="redirectExplore" />
+        <span data-i18n="toggleRedirectExplore"></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" data-key="redirectProfileReels" />
+        <span data-i18n="toggleRedirectProfileReels"></span>
+      </label>
+    </section>
 
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
 ```
 
 **Önemli:**
+
 - Hiçbir inline `<script>` yok (CSP).
 - Hiçbir inline event handler (`onclick`, `onchange`) yok (CSP).
 - Hiçbir external resource (font, image, CDN) yok.
@@ -652,7 +667,7 @@ body {
   max-width: 360px;
   background: var(--bg);
   color: var(--fg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 13px;
   line-height: 1.4;
 }
@@ -703,7 +718,7 @@ section h2 {
   border-bottom: none;
 }
 
-.toggle input[type="checkbox"] {
+.toggle input[type='checkbox'] {
   margin: 0 12px 0 0;
   cursor: pointer;
   flex-shrink: 0;
@@ -767,6 +782,7 @@ section h2 {
 ```
 
 **Önemli:**
+
 - IIFE wrap + `'use strict'` (Faz 3 ile tutarlı stil).
 - `chrome.runtime.sendMessage` yok — storage onChanged yeterli.
 - DEFAULTS popup.js'de de tanımlı (redirect.js'tekiyle birebir aynı olmalı; aksi halde drift olur). Faz 5'te shared constants dosyası düşünülebilir.
@@ -776,17 +792,20 @@ section h2 {
 ## 7. Sıkı Kısıtlamalar (DO NOT)
 
 ### Kategori: Mimari
+
 - ❌ `chrome.storage.sync` kullanmak — `local` zorunlu (Faz 1 mimari karar).
 - ❌ Mesajlaşma API'si (`chrome.runtime.sendMessage`, `chrome.tabs.sendMessage`) eklemek — storage onChanged yeterli.
 - ❌ Service worker eklemek — gereksiz, content script + popup zaten yeterli.
 - ❌ `options_page` veya `options_ui` manifest alanı — popup yeterli, options sayfası Faz 13+ konusu.
 
 ### Kategori: Manifest
+
 - ❌ `storage` dışında permission eklemek (`webNavigation`, `tabs`, `activeTab`, `notifications`, `scripting`).
 - ❌ `host_permissions` veya `content_scripts.matches` değiştirmek.
 - ❌ CSP'yi gevşetmek (`unsafe-inline`, `unsafe-eval`, external URL).
 
 ### Kategori: Popup
+
 - ❌ Inline `<script>` veya inline event handler (`onclick="..."`, `onchange="..."`) — CSP.
 - ❌ External script, font, image, CDN.
 - ❌ React, Vue, Lit, vb. framework.
@@ -794,16 +813,19 @@ section h2 {
 - ❌ Animation, transition, gradient — minimal UI.
 
 ### Kategori: i18n
+
 - ❌ Hardcoded Türkçe veya İngilizce metin (popup.html veya popup.js'de) — `data-i18n` ve `chrome.i18n.getMessage()` zorunlu.
 - ❌ TR ve EN messages.json arasında key uyumsuzluğu — doğrulama Bölüm 10'da.
 
 ### Kategori: Storage
+
 - ❌ DEFAULTS dışında key yazmak/okumak.
 - ❌ Schema'yı genişletmek — yeni toggle eklemek Faz 4 kapsamı değil.
 - ❌ `schemaVersion`'a dokunmak.
 - ❌ Storage'a kişisel veri yazmak — sadece boolean ayarlar.
 
 ### Kategori: Refactor
+
 - ❌ Faz 2 block.css mevcut kurallarını silmek/değiştirmek — sadece override **eklemek**.
 - ❌ G1 audio-filter (`:not([href^="/reels/audio/"])`) kaldırmak — Faz 2 Sapma 2.
 - ❌ Faz 3 redirect.js loop guard veya regex sıralamasını değiştirmek — Faz 3 Kural 13/15.
@@ -811,6 +833,7 @@ section h2 {
 - ❌ Polling parametrelerini (300/1000) değiştirmek — Faz 3 Kural 11.
 
 ### Kategori: Genel
+
 - ❌ Dosya yeniden adlandırma (`redirect.js` → `content-main.js`).
 - ❌ Yeni içerik script dosyası eklemek (manifest content_scripts.js array'i genişletmek).
 - ❌ npm, package.json, build pipeline.
@@ -825,11 +848,11 @@ Faz 4'te `chrome.storage.local.get()` **asenkrondur** — callback'i tetiklenmes
 
 ### Pencere boyunca davranış
 
-| An | settings | applyBlockingClasses() | Toggle state | Davranış |
-|----|----------|------------------------|--------------|----------|
-| t=0 (document_start) | DEFAULTS (tüm true) | henüz çağrılmadı | class'lar yok | Default CSS aktif → her şey engellenmiş |
-| t=10ms (storage cevap) | loaded settings | çağrıldı | kullanıcı OFF ettiyse class eklendi | Override aktif → element görünür |
-| t>10ms | settings | (onChanged ile) güncellenir | canlı | Kullanıcı popup'ta toggle değiştirir, anında uygulanır |
+| An                     | settings            | applyBlockingClasses()      | Toggle state                        | Davranış                                               |
+| ---------------------- | ------------------- | --------------------------- | ----------------------------------- | ------------------------------------------------------ |
+| t=0 (document_start)   | DEFAULTS (tüm true) | henüz çağrılmadı            | class'lar yok                       | Default CSS aktif → her şey engellenmiş                |
+| t=10ms (storage cevap) | loaded settings     | çağrıldı                    | kullanıcı OFF ettiyse class eklendi | Override aktif → element görünür                       |
+| t>10ms                 | settings            | (onChanged ile) güncellenir | canlı                               | Kullanıcı popup'ta toggle değiştirir, anında uygulanır |
 
 ### Race penceresi neden güvenli?
 
@@ -840,6 +863,7 @@ Faz 4'te `chrome.storage.local.get()` **asenkrondur** — callback'i tetiklenmes
 ### Initial `tick()` race
 
 `redirect.js` end'inde initial `tick()` çağrılır. Bu noktada `settings = DEFAULTS = redirect aktif`. Yani **kullanıcı redirect'i kapatmışsa**, storage gelmeden önce ilk tick redirect yapabilir. Bu nadir bir senaryo:
+
 - Kullanıcı redirect'i off etmiş.
 - Yeni sekme açıyor, doğrudan `/reels/`'e gidiyor.
 - Storage henüz okunmadı, `settings.redirectReels = true` (default).
@@ -858,6 +882,7 @@ Initial tick'i storage callback'ine ertelemek bu race'i çözer ama farklı bir 
 Eklentiyi `chrome://extensions/` → Reload (yeni dosyaları yüklesin) → eklenti ikonuna tıkla → popup açılır.
 
 ### Popup UI
+
 - [ ] Popup açılıyor, hata yok.
 - [ ] Başlık (`Reels Off Ayarları`) görünüyor (TR arayüzdeyse).
 - [ ] Alt başlık (`Tercihleriniz yalnızca cihazınızda saklanır`) görünüyor.
@@ -867,11 +892,13 @@ Eklentiyi `chrome://extensions/` → Reload (yeni dosyaları yüklesin) → ekle
 - [ ] Popup darkbg, açık metin (koyu tema).
 
 ### i18n
+
 - [ ] Tarayıcı dili Türkçe → tüm metinler Türkçe.
 - [ ] Tarayıcı dili İngilizce → tüm metinler İngilizce (`chrome://settings/languages` ile değiştirip popup'ı yeniden aç).
 - [ ] Hiçbir element boş veya `__MSG_*__` görünmüyor.
 
 ### Storage default state (ilk açılış)
+
 - [ ] Eklenti yüklenince Instagram'a git → sidebar Reels gizli (A1), Keşfet gizli (A2), profil Reels tab gizli (D1), feed reel post'ları gizli (G1).
 - [ ] `/reels/` URL'ine git → `/`'a yönleniyor (redirectReels).
 - [ ] `/explore/` URL'ine git → `/`'a yönleniyor (redirectExplore).
@@ -880,6 +907,7 @@ Eklentiyi `chrome://extensions/` → Reload (yeni dosyaları yüklesin) → ekle
 **Yani Faz 4 default davranışı = Faz 3 sonu davranışı = sıfır regresyon.**
 
 ### Canlı toggle testi
+
 - [ ] Popup'tan `blockSidebarReels` toggle'ını OFF et → IG sekmesine geç → **Reels linki tekrar görünür** (sayfa yenilenmeden!).
 - [ ] Popup'tan tekrar ON et → IG sekmesinde Reels linki **tekrar kayboldu** (sayfa yenilenmeden).
 - [ ] Aynı testi `blockSidebarExplore`, `blockProfileReelsTab`, `blockFeedReelPosts` için tekrarla.
@@ -888,22 +916,26 @@ Eklentiyi `chrome://extensions/` → Reload (yeni dosyaları yüklesin) → ekle
 - [ ] `redirectExplore` ve `redirectProfileReels` için aynı test.
 
 ### Persistance (ayar saklama)
+
 - [ ] Bir toggle'ı OFF et → tarayıcı sekmesini kapat → tekrar aç → popup'ta toggle hâlâ OFF görünüyor.
 - [ ] Eklentiyi devre dışı bırak → tekrar enable et → ayarlar korunmuş (`chrome.storage.local` eklenti enable/disable'da silinmez, sadece uninstall'da).
 
 ### Regression (önceki fazlar bozulmadı mı?)
+
 - [ ] Tüm toggle'lar ON iken Faz 3 davranışı birebir aynı.
 - [ ] G1 audio filter çalışıyor: müzik etiketli foto post'lar **gizlenmedi** (toggle ON iken bile).
 - [ ] Geri tuşu hâlâ Reels'e dönmüyor (`location.replace` korundu).
 - [ ] Loop yok, donma yok, "Too many redirects" yok.
 
 ### Sağlık kontrolü
+
 - [ ] `instagram.com/` (ana sayfa) — toggle state'inden bağımsız normal yükleniyor.
 - [ ] `instagram.com/instagram/` (normal profile) — normal yükleniyor.
 - [ ] `instagram.com/p/<id>/` (foto post) — normal yükleniyor.
 - [ ] DM, arama, bildirim sayfaları normal çalışıyor.
 
 ### Konsol kontrolü
+
 - [ ] Eklenti yüklendikten sonra konsola **yeni** hata düşmüyor (Faz 2-3 sonu ile aynı durum).
 - [ ] Popup açıkken konsolda hata yok.
 
@@ -999,30 +1031,39 @@ grep "audio" src/content/block.css                       # G1 audio-filter (Faz 
 `PHASE1_GUIDE.md` Bölüm 9 (Kural 1-8) + `PHASE2_GUIDE.md` (Kural 9-10) + `PHASE3_GUIDE.md` (Kural 11-16) hâlâ geçerli. Faz 4'e özel ek kurallar:
 
 ### Kural 17 — Mevcut kuralları silmek yerine üzerine eklemek
+
 block.css'te mevcut Faz 2 kuralları silinmez, **altına** override eklenir. redirect.js'te mevcut Faz 3 mantığı silinmez, **arasına** settings okuma ve `applyBlockingClasses()` eklenir. Silmek değil, eklemek.
 
 ### Kural 18 — DEFAULTS iki yerde tutarlı olmalı
+
 `popup.js` ve `redirect.js` her ikisi de DEFAULTS objesini tanımlar. Anahtar isimleri ve değerleri **birebir aynı** olmalı. Şablonu birebir kullan; tutarsızlık olursa bug = subtle ve hard-to-debug.
 
 ### Kural 19 — Default-true policy zorunlu
+
 Tüm 7 toggle default `true`. Tek bir tane bile `false` default'la başlatılırsa, ilk kurulumda eklenti yarı-pasif olur — kullanıcı beklenmedik davranış görür. Şablondan sapma.
 
 ### Kural 20 — CSS override mutlaka `display: revert !important`
+
 `display: block`, `display: initial`, `display: unset` farklı semantik. `revert` UA stylesheet'e dönmek için doğru anahtar (Baseline 2020, hedef tarayıcılarda tam destek). `!important` zorunlu çünkü default kuralı da `!important`.
 
 ### Kural 21 — i18n hardcoded metin kaçışı
+
 Popup HTML'de görünür hiçbir metin hardcoded olmamalı. Tüm metinler `data-i18n` attribute ile placeholder, popup.js dolduruyor. Aksi halde locale eklemek anlamsızlaşır.
 
 ### Kural 22 — Storage'a sadece schema'daki key'ler
+
 `chrome.storage.local.set({ randomKey: 'foo' })` YASAK. Sadece DEFAULTS'taki 7 key + (gerekirse) `schemaVersion` yazılabilir.
 
 ### Kural 23 — Mesajlaşma API'sine giriş yapmamak
+
 `chrome.runtime.sendMessage`, `chrome.tabs.sendMessage`, port API'leri Faz 4'te gereksiz. `chrome.storage.onChanged` content script'i bilgilendiriyor. Eklemek = gereksiz karmaşıklık + ekstra Web Store inceleme alanı.
 
 ### Kural 24 — Manifest minimal değişiklik
+
 Manifest'e SADECE `"permissions": ["storage"]` eklenir. Başka hiçbir değişiklik (CSP, gecko, action, content_scripts) YASAK.
 
 ### Faz 4'e özel canlı doğrulama notu
+
 Faz 4'te yapılan değişiklikler birçok dosyaya yayıldı. Görsel test (Bölüm 9) bu yüzden Faz 1-3'e göre daha uzun. Test eksik geçilirse subtle regression yakalanamaz — özellikle "canlı toggle testi" ve "G1 audio filter regression" kontrolleri kritik.
 
 ---

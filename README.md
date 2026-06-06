@@ -22,12 +22,15 @@
 ## Kurulum
 
 ### Chrome
-1. Chrome Web Store sayfasından yükleyin: *(yayınlandığında eklenecek)*
+
+1. Chrome Web Store sayfasından yükleyin: _(yayınlandığında eklenecek)_
 
 ### Firefox
-1. Mozilla Add-ons sayfasından yükleyin: *(yayınlandığında eklenecek)*
+
+1. Mozilla Add-ons sayfasından yükleyin: _(yayınlandığında eklenecek)_
 
 ### Geliştirici modunda yükleme (yayın öncesi)
+
 1. Bu repo'yu klonlayın
 2. Chrome'da: `chrome://extensions/` → "Geliştirici modu" → "Paketlenmemiş öğe yükle" → repo klasörünü seçin
 3. Firefox'ta: `about:debugging#/runtime/this-firefox` → "Geçici Eklenti Yükle" → `manifest.json` dosyasını seçin

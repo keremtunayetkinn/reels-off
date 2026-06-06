@@ -26,11 +26,13 @@
 **Yayın hedefi:** Chrome Web Store + Mozilla Add-ons (AMO), Türkçe ve İngilizce dil destekli.
 
 **Tek amaç (single purpose statement — Web Store gereği):**
+
 > "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek kullanıcının dikkat dağıtıcı içeriklere maruz kalmasını azaltır."
 
 Bu cümle eklentinin tüm yaşam döngüsündeki sınırı belirler. Faz 2-13 boyunca eklentiye eklenecek hiçbir özellik bu kapsamın dışına çıkmamalı.
 
 **Hedef teknik özellikleri:**
+
 - Manifest V3 (Chrome ve Firefox uyumlu)
 - Vanilla JavaScript (framework, transpiler, bundler yok)
 - CSS-first engelleme stratejisi
@@ -45,19 +47,19 @@ Bu cümle eklentinin tüm yaşam döngüsündeki sınırı belirler. Faz 2-13 bo
 
 Bu kararlar Faz 0 araştırmaları sonucunda kesinleşmiştir. Bunları **sorgulama** veya **iyileştirme** girişiminde bulunma. Aksi belirtilmedikçe, bu kararlar geçerlidir.
 
-| Karar | Gerekçe |
-|-------|---------|
-| **Vanilla JS, framework yok** | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi. |
-| **Bundler yok** | Webpack/Vite/Parcel yok. Web Store reviewer kaynak kodu okuyor — minify edilmiş kod şüphe çeker. |
-| **npm dependencies yok** | `package.json` opsiyonel. Eğer eklersen sadece devDependencies (ESLint, Prettier) olabilir. |
-| **href-first seçici stratejisi** | Instagram class isimleri obfuscated (`x1qjc9v5`, `_aaa1`); href routing kararlı. |
-| **chrome.storage.local** | sync değil. Veri Google sunucularına gönderilmez = privacy policy daha temiz. |
-| **CSP: `script-src 'self'; object-src 'none'; base-uri 'none';`** | `unsafe-inline`, `unsafe-eval`, external URL'ler YASAK. |
-| **host_permissions: tek bir entry** | `["https://www.instagram.com/*"]`. `<all_urls>` YASAK. |
-| **permissions: boş başla** | İhtiyaç ortaya çıktıkça ekle. `storage`, `tabs`, `activeTab`, `webNavigation` Faz 1'de YASAK. |
-| **No remote code** | MV3 zaten yasaklıyor ama bilinçli ol: CDN script yükleme, dinamik kod execution, `eval`, `new Function()` yok. |
-| **No build step** | Dosyaları doğrudan kullanılır halde tut. `npm run build` yok. |
-| **Source not minified** | Web Store reviewer için şeffaf kalsın. |
+| Karar                                                             | Gerekçe                                                                                                        |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Vanilla JS, framework yok**                                     | React/Vue/jQuery yok. Bağımlılık = saldırı yüzeyi.                                                             |
+| **Bundler yok**                                                   | Webpack/Vite/Parcel yok. Web Store reviewer kaynak kodu okuyor — minify edilmiş kod şüphe çeker.               |
+| **npm dependencies yok**                                          | `package.json` opsiyonel. Eğer eklersen sadece devDependencies (ESLint, Prettier) olabilir.                    |
+| **href-first seçici stratejisi**                                  | Instagram class isimleri obfuscated (`x1qjc9v5`, `_aaa1`); href routing kararlı.                               |
+| **chrome.storage.local**                                          | sync değil. Veri Google sunucularına gönderilmez = privacy policy daha temiz.                                  |
+| **CSP: `script-src 'self'; object-src 'none'; base-uri 'none';`** | `unsafe-inline`, `unsafe-eval`, external URL'ler YASAK.                                                        |
+| **host_permissions: tek bir entry**                               | `["https://www.instagram.com/*"]`. `<all_urls>` YASAK.                                                         |
+| **permissions: boş başla**                                        | İhtiyaç ortaya çıktıkça ekle. `storage`, `tabs`, `activeTab`, `webNavigation` Faz 1'de YASAK.                  |
+| **No remote code**                                                | MV3 zaten yasaklıyor ama bilinçli ol: CDN script yükleme, dinamik kod execution, `eval`, `new Function()` yok. |
+| **No build step**                                                 | Dosyaları doğrudan kullanılır halde tut. `npm run build` yok.                                                  |
+| **Source not minified**                                           | Web Store reviewer için şeffaf kalsın.                                                                         |
 
 ---
 
@@ -67,20 +69,20 @@ Faz 0'da Instagram DOM'u haritalandı. Faz 1 manifest'inin `content_scripts.matc
 
 **Doğrulanmış seçiciler (Faz 2-4'te kullanılacak):**
 
-| ID | Element | Seçici |
-|----|---------|--------|
-| A1 | Sidebar Reels linki | `a[href="/reels/"]` |
-| A2 | Sidebar Keşfet linki (opsiyonel) | `a[href="/explore/"]` |
-| D1 | Profil Reels tab | `main a[href$="/reels/"]:not([href="/reels/"])` |
-| G1 | Feed'e gömülü tekil Reel post'ları | `a[href^="/reels/"]:not([href="/reels/"])` |
+| ID  | Element                            | Seçici                                          |
+| --- | ---------------------------------- | ----------------------------------------------- |
+| A1  | Sidebar Reels linki                | `a[href="/reels/"]`                             |
+| A2  | Sidebar Keşfet linki (opsiyonel)   | `a[href="/explore/"]`                           |
+| D1  | Profil Reels tab                   | `main a[href$="/reels/"]:not([href="/reels/"])` |
+| G1  | Feed'e gömülü tekil Reel post'ları | `a[href^="/reels/"]:not([href="/reels/"])`      |
 
 **URL redirect hedefleri (Faz 2'de JS polling ile):**
 
-| ID | URL pattern | Aksiyon |
-|----|-------------|---------|
-| E1 | `/explore/*` | `location.replace('/')` (opsiyonel, user toggle) |
-| F1 | `/reels/` ve `/reels/<id>/` | `location.replace('/')` |
-| F1' | `/<username>/reels/` (profil Reels feed) | `location.replace('/' + username)` |
+| ID  | URL pattern                              | Aksiyon                                          |
+| --- | ---------------------------------------- | ------------------------------------------------ |
+| E1  | `/explore/*`                             | `location.replace('/')` (opsiyonel, user toggle) |
+| F1  | `/reels/` ve `/reels/<id>/`              | `location.replace('/')`                          |
+| F1' | `/<username>/reels/` (profil Reels feed) | `location.replace('/' + username)`               |
 
 **Faz 1 için önemli not:** Yukarıdaki seçiciler/URL pattern'leri Faz 1'de **henüz implement edilmiyor**. Faz 1'de sadece bunların yer alacağı placeholder dosyaları oluşturulacak.
 
@@ -113,6 +115,7 @@ touch src/content/.gitkeep src/popup/.gitkeep src/icons/.gitkeep docs/.gitkeep
 Bu komutlar ile klasör iskeleti hazır olmalı. `.gitkeep` dosyaları boş klasörlerin git'te takip edilebilmesi için.
 
 **Beklenen yapı:**
+
 ```
 proje-kök/
 ├── src/
@@ -145,7 +148,7 @@ Bölüm 6.2'deki şablonu birebir kullan. `[KULLANICI_*]` placeholder'larını G
 
 **Gecko ID formatı:** `@extension-slug.kerem-tuna` örneğin `@sakin-instagram.kerem-tuna` veya `@reels-off.kerem-tuna`. Slug, eklenti adının lowercase kebab-case versiyonu. **GERÇEK EMAIL KULLANMA** — formatı email-like ama içeriği herhangi bir string olabilir.
 
-### Görev 4.5 — _locales dosyalarını oluştur
+### Görev 4.5 — \_locales dosyalarını oluştur
 
 Bölüm 6.7 (`src/_locales/tr/messages.json`) ve Bölüm 6.8 (`src/_locales/en/messages.json`) şablonlarını kullan.
 
@@ -181,6 +184,7 @@ Branch ismi `main` olmalı. `master` değil.
 Bu listede olan hiçbir şeyi yapma — kullanıcı açıkça istemedikçe ve sebebini açıklamadıkça.
 
 ### Kategori: Bağımlılık
+
 - ❌ `npm install <herhangi-bir-paket>` çalıştırma — sadece ESLint/Prettier için kullanıcı izin verirse.
 - ❌ `package.json` oluştururken `dependencies` ekleme — sadece `devDependencies` izinli.
 - ❌ React, Vue, Svelte, jQuery, Lodash, Axios, Moment, vb. herhangi bir kütüphane ekleme.
@@ -188,6 +192,7 @@ Bu listede olan hiçbir şeyi yapma — kullanıcı açıkça istemedikçe ve se
 - ❌ TypeScript ekleme — bu vanilla JS projesi.
 
 ### Kategori: Manifest
+
 - ❌ `permissions: ["storage", "tabs", "activeTab", "webNavigation", "cookies", "scripting"]` — hiçbiri Faz 1'de gerekmez.
 - ❌ `host_permissions: ["<all_urls>"]` — sadece `["https://www.instagram.com/*"]`.
 - ❌ CSP'de `'unsafe-inline'`, `'unsafe-eval'`, `data:`, `https:` — sadece `'self'`.
@@ -195,6 +200,7 @@ Bu listede olan hiçbir şeyi yapma — kullanıcı açıkça istemedikçe ve se
 - ❌ `web_accessible_resources` Faz 1'de gerekmez.
 
 ### Kategori: Kod
+
 - ❌ Inline script (`<script>...</script>` veya `onclick="..."`) — CSP zaten engeller, ama yazma.
 - ❌ `eval()`, `new Function()`, `setTimeout(string)` — ASLA.
 - ❌ `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write` — `textContent` veya `createElement` kullan.
@@ -202,16 +208,19 @@ Bu listede olan hiçbir şeyi yapma — kullanıcı açıkça istemedikçe ve se
 - ❌ Telemetri, analitik, error reporting — hiç.
 
 ### Kategori: Privacy Policy
+
 - ❌ Olmayan özellikler için clause ekleme ("we may collect..." gibi cümleler bizim için geçerli değil).
 - ❌ Generic template'lerden direkt kopyalama — özellikle Termly, Privacy Policies dot com gibi servislerden.
 - ❌ "Üçüncü taraflarla paylaşırız" tipi cümleler — bizim policy'mizde "hiçbir veri toplanmaz" net olmalı.
 
 ### Kategori: README
+
 - ❌ Marketing dili ("amazing", "powerful", "next-gen"). Teknik dokümantasyon tonu.
 - ❌ Olmayan özelliklerden bahsetme.
 - ❌ Build instructions ekleme — proje vanilla, build yok.
 
 ### Kategori: Genel
+
 - ❌ Faz 2-13 kapsamındaki dosyaları doldurma. Boş placeholder'lar OK, içerik HAYIR.
 - ❌ Test yazma — Faz 10'da yapılacak.
 - ❌ CI/CD config (GitHub Actions, vb.) — Faz 13'te düşünülür.
@@ -284,9 +293,7 @@ coverage/
     "128": "src/icons/icon-128.png"
   },
 
-  "host_permissions": [
-    "https://www.instagram.com/*"
-  ],
+  "host_permissions": ["https://www.instagram.com/*"],
 
   "content_scripts": [
     {
@@ -323,6 +330,7 @@ coverage/
 ```
 
 **Notlar:**
+
 - `content_scripts.css` ve `content_scripts.js` Faz 2'de doldurulacak boş dosyalara işaret ediyor. Bu dosyaları aşağıdaki Görev 4.4 sonunda boş olarak oluştur:
   - `src/content/block.css` — sadece bu yorumu içersin: `/* Faz 2-4'te doldurulacak */`
   - `src/content/redirect.js` — sadece bu yorumu içersin: `// Faz 2'de doldurulacak`
@@ -332,22 +340,24 @@ coverage/
 - `web_accessible_resources` ekleme — Faz 1'de gerekmez.
 
 **Placeholder popup.html (Faz 5'te değişecek):**
+
 ```html
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <!-- Faz 5'te doldurulacak -->
-  <script src="popup.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Faz 5'te doldurulacak -->
+    <script src="popup.js"></script>
+  </body>
 </html>
 ```
 
 **Placeholder popup.css ve popup.js:**
+
 - `src/popup/popup.css` — `/* Faz 5'te doldurulacak */`
 - `src/popup/popup.js` — `// Faz 5'te doldurulacak`
 
@@ -404,12 +414,15 @@ SOFTWARE.
 ## Kurulum
 
 ### Chrome
-1. Chrome Web Store sayfasından yükleyin: *(yayınlandığında eklenecek)*
+
+1. Chrome Web Store sayfasından yükleyin: _(yayınlandığında eklenecek)_
 
 ### Firefox
-1. Mozilla Add-ons sayfasından yükleyin: *(yayınlandığında eklenecek)*
+
+1. Mozilla Add-ons sayfasından yükleyin: _(yayınlandığında eklenecek)_
 
 ### Geliştirici modunda yükleme (yayın öncesi)
+
 1. Bu repo'yu klonlayın
 2. Chrome'da: `chrome://extensions/` → "Geliştirici modu" → "Paketlenmemiş öğe yükle" → repo klasörünü seçin
 3. Firefox'ta: `about:debugging#/runtime/this-firefox` → "Geçici Eklenti Yükle" → `manifest.json` dosyasını seçin
@@ -456,6 +469,7 @@ Bu eklenti **hiçbir kişisel veri toplamaz, işlemez veya iletmez.** Hiçbir an
 ## Toplanmayan veriler
 
 Eklenti aşağıdaki veri türlerinin **hiçbirini** toplamaz, kaydetmez veya iletmez:
+
 - Kişisel kimlik bilgileri (ad, e-posta, telefon, adres)
 - Kimlik doğrulama bilgileri (şifre, oturum jetonu, çerez)
 - Konum verisi
@@ -467,6 +481,7 @@ Eklenti aşağıdaki veri türlerinin **hiçbirini** toplamaz, kaydetmez veya il
 ## Yerel depolama
 
 Eklentinin tek depoladığı bilgi, kullanıcının açıp kapattığı engelleme özelliklerinin tercihleridir (boolean değerler). Bu veriler:
+
 - `chrome.storage.local` API'si üzerinden **yalnızca kullanıcının cihazında** saklanır
 - Hiçbir sunucuya gönderilmez
 - Hiçbir üçüncü tarafla paylaşılmaz
@@ -475,6 +490,7 @@ Eklentinin tek depoladığı bilgi, kullanıcının açıp kapattığı engellem
 ## İzinler
 
 Eklenti yalnızca aşağıdaki izni kullanır:
+
 - **`https://www.instagram.com/*` (host izni):** Eklentinin Instagram web sayfalarında çalışıp Reels ve önerilen içerikleri gizleyebilmesi için gereklidir. Eklenti yalnızca bu siteye erişir, başka hiçbir siteye değil.
 
 ## Üçüncü taraflar
@@ -516,6 +532,7 @@ This extension **does not collect, process, or transmit any personal data.** It 
 ## Data not collected
 
 The extension does **not** collect, store, or transmit any of the following data types:
+
 - Personally identifiable information (name, email, phone, address)
 - Authentication information (passwords, session tokens, cookies)
 - Location data
@@ -527,6 +544,7 @@ The extension does **not** collect, store, or transmit any of the following data
 ## Local storage
 
 The only information the extension stores is the user's preferences for blocking features (boolean values). This data:
+
 - Is stored exclusively on the user's device via the `chrome.storage.local` API
 - Is never sent to any server
 - Is never shared with any third party
@@ -535,6 +553,7 @@ The only information the extension stores is the user's preferences for blocking
 ## Permissions
 
 The extension uses only the following permission:
+
 - **`https://www.instagram.com/*` (host permission):** Required for the extension to operate on Instagram web pages and hide Reels and recommended content. The extension accesses only this site, no other.
 
 ## Third parties
@@ -660,6 +679,7 @@ Aşağıdakileri **mutlaka** kullanıcıya sor, varsayım yapma:
 ## 8. Faz Sonrası Doğrulama
 
 ### 8.1 — Manifest doğrulama
+
 ```bash
 # JSON syntax check
 cat manifest.json | python3 -m json.tool > /dev/null && echo "✓ JSON valid"
@@ -675,33 +695,39 @@ grep "data_collection_permissions" manifest.json && echo "✓ Firefox uyumlu" ||
 ```
 
 ### 8.2 — Klasör yapısı doğrulama
+
 ```bash
 ls -la src/ docs/
 test -d src/content && test -d src/popup && test -d src/_locales/tr && test -d src/_locales/en && test -d src/icons && echo "✓ Klasör yapısı doğru"
 ```
 
 ### 8.3 — Locale dosyaları doğrulama
+
 ```bash
 # TR ve EN'de aynı key'ler var mı?
 diff <(jq 'keys' src/_locales/tr/messages.json) <(jq 'keys' src/_locales/en/messages.json) && echo "✓ Locale key'leri eşleşiyor"
 ```
 
 ### 8.4 — Yasaklı bağımlılık kontrolü
+
 ```bash
 test ! -f package.json || (grep -E '"(react|vue|angular|jquery|webpack|vite|parcel)"' package.json && echo "✗ HATA: yasaklı bağımlılık" || echo "✓ Bağımlılık temiz")
 ```
 
 ### 8.5 — Chrome'da yükleme testi
+
 1. Chrome'u aç → `chrome://extensions/` → "Geliştirici modu"'nu aç
 2. "Paketlenmemiş öğe yükle" → repo klasörünü seç
 3. Eklenti yüklenirse ✓. Hata mesajı varsa kullanıcıya raporla.
 
 ### 8.6 — Firefox'ta yükleme testi (opsiyonel — Firefox 140+ gerekir)
+
 1. Firefox aç → `about:debugging#/runtime/this-firefox`
 2. "Geçici Eklenti Yükle" → `manifest.json` seç
 3. Eklenti yüklenirse ✓.
 
 ### 8.7 — Git durumu
+
 ```bash
 git log --oneline
 # En az bir commit olmalı: "Initial scaffold: Phase 1..."
@@ -717,28 +743,37 @@ git status
 Bu projede halüsinasyon riskini minimize etmek için:
 
 ### Kural 1: Verbatim Şablon Kullanımı
+
 Bölüm 6'daki şablonları **harfiyen** kopyala. Tek harf değiştirme. Tek satır ekleme. Tek alan çıkarma. "İyileştirme" yapma.
 
 ### Kural 2: Placeholder'ları Açık Bırak
+
 Bilgisi olmayan placeholder'lara `[KULLANICI_X]` ile bırak ve kullanıcıya sor. Asla "muhtemelen bu olmalı" diye doldurma.
 
 ### Kural 3: Bilmediğin MV3 Field'ı Ekleme
+
 Bu doküman dışında bir MV3 alanı eklemek istiyorsan **DUR**. Önce kullanıcıya sor. MV3 spesifikasyonu Anthropic eğitim verisinden eski olabilir.
 
 ### Kural 4: Sürüm Bilgilerini Sorgula
+
 Eğer "şu Firefox sürümü, şu Chrome sürümü" tarzı bir bilgi vermen gerekiyorsa, **kaynak alıntıla**. Bu dokümandaki sürüm numaraları (Firefox 140, Chrome MV3 Manifest V2 fully removed) doğrulanmıştır.
 
 ### Kural 5: Generic Privacy Policy'den Uzak Dur
+
 PRIVACY-TR.md ve PRIVACY-EN.md kasıtlı olarak minimaldir. "Bunu da ekleyelim, şu da olsun" deme — şablon birebir kullanılacak.
 
 ### Kural 6: Faz Sınırına Saygı
+
 Bu doküman sadece Faz 1 içindir. Faz 2-13 görevlerini **proaktif olarak** yapma. Kullanıcı sonraki fazları başlatınca yeni kılavuz vereceğim.
 
 ### Kural 7: Şüphede Sor, Devam Etme
+
 Bir şey eksik, çelişkili veya belirsiz görünüyorsa devam etme. Kullanıcıya net bir soru sor.
 
 ### Kural 8: Çıktı Raporu Ver
+
 Faz 1 tamamlandığında:
+
 - Hangi dosyalar oluşturuldu (liste)
 - Hangi doğrulama testleri geçti (Bölüm 8'den)
 - Hangi placeholder'lar henüz doldurulmadı (eğer varsa)
