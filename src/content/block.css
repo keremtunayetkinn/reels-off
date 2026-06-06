@@ -28,10 +28,10 @@
  *   Feed reel post'ları /reels/<id>/ formatında olduğundan hariç kalır.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-a[href="/reels/"] {
+a[href='/reels/'] {
   display: none !important;
 }
-html.ro-disable-sidebar-reels a[href="/reels/"] {
+html.ro-disable-sidebar-reels a[href='/reels/'] {
   display: revert !important;
 }
 
@@ -41,10 +41,10 @@ html.ro-disable-sidebar-reels a[href="/reels/"] {
  *   /explore/locations/, /explore/search/ gibi alt yollar hariç kalır.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-a[href="/explore/"] {
+a[href='/explore/'] {
   display: none !important;
 }
-html.ro-disable-sidebar-explore a[href="/explore/"] {
+html.ro-disable-sidebar-explore a[href='/explore/'] {
   display: revert !important;
 }
 
@@ -56,10 +56,10 @@ html.ro-disable-sidebar-explore a[href="/explore/"] {
  *   (role="tab" DEĞİL), bu yüzden href suffix ile hedefleniyor.
  * Güven: Yüksek (Faz 0)
  * ------------------------------------------------------------------------- */
-main a[href$="/reels/"]:not([href="/reels/"]) {
+main a[href$='/reels/']:not([href='/reels/']) {
   display: none !important;
 }
-html.ro-disable-profile-reels-tab main a[href$="/reels/"]:not([href="/reels/"]) {
+html.ro-disable-profile-reels-tab main a[href$='/reels/']:not([href='/reels/']) {
   display: revert !important;
 }
 
@@ -71,9 +71,10 @@ html.ro-disable-profile-reels-tab main a[href$="/reels/"]:not([href="/reels/"]) 
  * Performans notu: :has() anchor'ı (article) dar; uyarı yok.
  * Güven: Yüksek (canlı doğrulandı)
  * ------------------------------------------------------------------------- */
-article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+article:has(a[href^='/reels/']:not([href='/reels/']):not([href^='/reels/audio/'])) {
   display: none !important;
 }
-html.ro-disable-feed-reel-posts article:has(a[href^="/reels/"]:not([href="/reels/"]):not([href^="/reels/audio/"])) {
+html.ro-disable-feed-reel-posts
+  article:has(a[href^='/reels/']:not([href='/reels/']):not([href^='/reels/audio/'])) {
   display: revert !important;
 }

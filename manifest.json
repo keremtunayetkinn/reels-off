@@ -12,13 +12,9 @@
     "128": "src/icons/icon-128.png"
   },
 
-  "host_permissions": [
-    "https://www.instagram.com/*"
-  ],
+  "host_permissions": ["https://www.instagram.com/*"],
 
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
 
   "content_scripts": [
     {
