@@ -20,9 +20,11 @@
  *   redirectExplore           (bool, default true) → E1 koşulu
  *   redirectProfileReels      (bool, default true) → F1c koşulu
  *
- * Cold-read race: storage async; defaults tüm true → race penceresinde
- *   default davranış = engelleme aktif (Faz 3 davranışıyla aynı). Storage
- *   yüklendikten sonra kullanıcının kapatma tercihi uygulanır.
+ * Cold-read race: block.css default kuralları race penceresinde engellemeyi
+ *   aktif tutar (gizleme toggle'ları için kabul edilebilir trade-off). Faz 5
+ *   G5.2 ile yönlendirme tick'i storage callback içine taşındı: bookmark veya
+ *   doğrudan navigation ile gelen kullanıcı, yönlendirme toggle'ının kapalı
+ *   değerine ilk hit'te saygı görür. Ek redirect gecikmesi ~10-20ms.
  *
  * Faz 3'ten korunan: location.replace(), iki katmanlı loop guard, regex
  *   sıralaması (F1a/b → E1 → F1c), polling parametreleri (300/1000 ms).
@@ -84,15 +86,14 @@
     root.classList.toggle('ro-disable-sidebar-explore', settings.blockSidebarExplore === false);
     root.classList.toggle('ro-disable-profile-reels-tab', settings.blockProfileReelsTab === false);
     root.classList.toggle('ro-disable-feed-reel-posts', settings.blockFeedReelPosts === false);
+    // Chrome :has() bazen ancestor class değişiminde re-evaluate olmuyor;
+    // OFF→ON canlı cycle'ında reel'ler yeniden gizlenmiyordu (KN2 Bulgu #5).
+    // Layout pass'i zorlayarak :has() invalidation'ını tetikliyoruz. ~1 frame perf.
+    void root.offsetHeight;
   }
 
-  // Storage'tan settings'i oku, root class'ları uygula
-  chrome.storage.local.get(DEFAULTS, (loaded) => {
-    settings = { ...DEFAULTS, ...loaded };
-    applyBlockingClasses();
-  });
-
-  // Popup'tan toggle değişikliği geldiğinde canlı uygula
+  // onChanged listener'ı storage.get callback'inden ÖNCE kur: callback gelmeden
+  // önce popup'ta toggle değişirse kaçırılmasın.
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
     for (const key in changes) {
@@ -103,10 +104,14 @@
     applyBlockingClasses();
   });
 
-  // İlk kontrol document_start anında — kullanıcı doğrudan /reels/'e gelmişse
-  // IG kodunun render başlamasından önce redirect tetiklenir (flicker yok).
-  tick();
-
-  // SPA navigation (history.pushState) için periyodik kontrol.
-  window.setInterval(tick, POLL_INTERVAL_MS);
+  // Storage hazır → class'ları uygula → tick + interval'ı başlat.
+  // Faz 5 G5.2: tick'in callback içine taşınması cold-read race'i kapatır.
+  // Yönlendirme aktif kullanıcı için redirect storage gelir gelmez tetiklenir;
+  // IG render başlamasından önce (flicker pratik olarak yok).
+  chrome.storage.local.get(DEFAULTS, (loaded) => {
+    settings = { ...DEFAULTS, ...loaded };
+    applyBlockingClasses();
+    tick();
+    window.setInterval(tick, POLL_INTERVAL_MS);
+  });
 })();
