@@ -175,22 +175,26 @@ Tek saklanan veri: kullanıcının tercih ettiği toggle durumları (boolean), `
 
 ## 7. Gizlilik Politikası URL'si
 
-**Kullanıcı aksiyonu gerekli — Claude Code yapamaz (Kural 34).**
+**Karar:** GitHub Pages (Cayman teması, `docs/` klasöründen yayın).
 
-Mağazalar yayınlanmış (HTTPS) bir gizlilik politikası URL'si ister. Şu an mevcut:
+Kullanılacak canlı URL'ler (Pages etkinleştirildikten sonra):
 
-- Repo'da: `PRIVACY-TR.md` ve `PRIVACY-EN.md` (yerel)
+- **EN (CWS submission):** `https://keremtunayetkinn.github.io/reels-off/privacy-en/`
+- **TR (AMO submission veya ek):** `https://keremtunayetkinn.github.io/reels-off/privacy-tr/`
+- **Landing:** `https://keremtunayetkinn.github.io/reels-off/`
 
-İhtiyaç: Bu dosyaların **public erişilebilir HTTPS URL'leri**. Üç olası yol:
+Kaynak dosyalar (senkron tutulmalı):
 
-1. **GitHub repo public yapıldıktan sonra raw URL:**
-   - `https://raw.githubusercontent.com/keremtunayetkinn/reels-off/main/PRIVACY-EN.md`
-   - `https://raw.githubusercontent.com/keremtunayetkinn/reels-off/main/PRIVACY-TR.md`
-2. **GitHub Pages** (görsel olarak daha temiz):
-   - `https://keremtunayetkinn.github.io/reels-off/privacy-en`
-3. **Ayrı statik host** (örn. kişisel site).
+- Canonical: `PRIVACY-EN.md` ve `PRIVACY-TR.md` (repo kökü, pakete dahil)
+- Mirror (Pages): `docs/privacy-en.md` ve `docs/privacy-tr.md`
+- Mirror (paket): `dist/staging/PRIVACY-{EN,TR}.md`
 
-**Karar tek başına senin:** repo public yapma ve gizlilik politikası hosting'i Kural 34 kapsamında kullanıcı aksiyonudur.
+**Pages etkinleştirme (kullanıcı aksiyonu — tek seferlik):**
+
+1. GitHub repo → Settings → Pages
+2. Source: **Deploy from a branch**
+3. Branch: **main**, Folder: **/docs**
+4. Save → ~1 dakika sonra URL canlı
 
 ---
 

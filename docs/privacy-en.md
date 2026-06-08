@@ -1,3 +1,11 @@
+---
+title: Privacy Policy
+layout: default
+permalink: /privacy-en/
+---
+
+<!-- Mirror of /PRIVACY-EN.md — keep in sync with the repo root copy. -->
+
 # Privacy Policy — Reels Off
 
 **Last updated:** 2026-06-08

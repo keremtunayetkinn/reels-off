@@ -1,0 +1,11 @@
+title: Reels Off
+description: A privacy-focused browser extension that hides Reels and algorithmic suggestions on Instagram's web interface.
+theme: jekyll-theme-cayman
+
+exclude:
+  - store-listing.md
+  - selectors.md
+  - threat-model.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/

@@ -1,3 +1,11 @@
+---
+title: Gizlilik Politikası
+layout: default
+permalink: /privacy-tr/
+---
+
+<!-- /PRIVACY-TR.md dosyasının kopyası — repo kökündeki ile senkron tutulmalı. -->
+
 # Gizlilik Politikası — Reels Off
 
 **Son güncelleme:** 2026-06-08
