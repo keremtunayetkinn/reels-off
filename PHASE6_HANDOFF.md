@@ -557,14 +557,10 @@ Public yapma günü için ek temizlik checklist'i:
 
 **Public-açma temizlik checklist'i:**
 
-- [ ] **Git author e-posta:** Tüm commit'lerin author trailer'ında
-      `Kerem Tuna Yetkin <ktyetkin@hotmail.com>` görünüyor. README/PRIVACY'deki
-      `ktyetkinwork@gmail.com`'dan **farklı bir e-posta** (kişisel hotmail).
-      Public repo'da herkes görür. İki seçenek:
-      (i) Olduğu gibi bırak (iki e-posta da public olur),
-      (ii) Git rebase/filter ile geçmiş author e-posta'ları `ktyetkinwork@gmail.com`'a
-      birleştir (**force push gerekir**; private repo iken yapılırsa risk yok,
-      public yaptıktan sonra force push yapma).
+- [x] **Git author e-posta:** Tamamlandı. Tüm commit'lerin author/committer
+      e-postası `git filter-branch --env-filter` ile `ktyetkinwork@gmail.com`'a
+      yeniden yazıldı; private repo iken force-push edildi. Public yüzeylerde
+      kişisel hotmail görünmüyor.
 - [ ] **"Kerem Tuna" ifadesi:** Tüm PHASE1-6
       GUIDE/HANDOFF dosyalarında geçiyor. Public repo'da bu bilgi (ad +
       üniversite + bölüm) herkes görür. İki seçenek:
