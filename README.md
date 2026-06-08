@@ -19,6 +19,10 @@
 - Hiçbir veri toplamaz, hiçbir analitik göndermez
 - Otomatik beğeni, takip etme veya etkileşim yapmaz
 
+## Bilinen sınırlamalar
+
+- **Ana akışta nadir görsel boşluk (G1):** "Ana akıştaki Reels gönderilerini gizle" seçeneği açıkken (varsayılan), ana akışta uzun süreli kaydırma sırasında nadiren boş bir alan ve hafif bir kayma görülebilir. Bunun nedeni Instagram'ın akış render yapısı ile gizleme katmanının etkileşimidir; veri kaybına veya gizlilik sorununa yol açmaz. **Geçici çözüm:** popup'tan "Ana akıştaki Reels gönderilerini gizle" seçeneğini kapatın. Eklentinin diğer gizleme ve yönlendirme işlevleri bundan etkilenmez.
+
 ## Kurulum
 
 ### Chrome
