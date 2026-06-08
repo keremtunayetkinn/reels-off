@@ -1,6 +1,6 @@
 {
   "name": "reels-off",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Local dev tooling (lint/format) for the Reels Off browser extension. Not published.",
   "scripts": {

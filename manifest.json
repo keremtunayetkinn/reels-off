@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "default_locale": "tr",
 
   "icons": {
@@ -46,6 +46,8 @@
         "required": ["none"]
       }
     },
-    "gecko_android": {}
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
   }
 }
