@@ -198,20 +198,31 @@ Kaynak dosyalar (senkron tutulmalı):
 
 ---
 
-## 8. Görsel Listesi (Hatırlatma)
+## 8. Görsel Listesi
 
-> Boyut/adet sabit sayı vermiyorum (Kural 35) — başvuru anında CWS ve AMO resmi
-> dokümanından doğrula.
+> CWS resmi boyut: 1280×800 PNG (veya 640×400). AMO esnek. Aşağıdaki üç görsel
+> 1280×800 PNG olarak hazırlandı; her iki mağazada kullanılabilir.
 
-Hazırlanan/hazırlanacak:
+Repo içindeki konum: `screenshots/`
 
-- [x] Popup ekran görüntüsü — `Ekran görüntüsü 2026-06-07 180033.png` (HIDE/REDIRECT toggle'lar görünür, English UI)
-- [x] `/reels/` redirect demosu — `Ekran görüntüsü 2026-06-07 181002.png`
-- [x] `/explore/` redirect demosu — `Ekran görüntüsü 2026-06-07 181233.png`
-- [ ] (Opsiyonel) İkonun büyük render'ı (mağaza tile/promo)
-- [ ] (Opsiyonel) "Öncesi vs. sonrası" karşılaştırma görseli
+- [x] **Popup overview** — `screenshots/01-popup-overview.png`
+      URL `instagram.com` + Reels Off popup + 7 toggle (mixed state — bağımsız
+      kontrol mesajı verir) + sol sidebar görünür, English UI.
+- [x] **`/reels/` redirect demo** — `screenshots/02-redirect-reels.png`
+      URL bar `instagram.com/reels` + popup tüm toggle'lar açık + sidebar Reels
+      ikonu **gizlenmiş** (redirect + sidebar hide kanıtı).
+- [x] **`/explore/` redirect demo** — `screenshots/03-redirect-explore.png`
+      URL bar `instagram.com/explore/` + popup tüm toggle'lar açık + sidebar
+      temiz (Explore redirect + sidebar hide kanıtı).
+- [ ] (Opsiyonel) İkonun büyük render'ı (mağaza tile/promo, 440×280 küçük tile
+      veya 1400×560 marquee — CWS için)
+- [ ] (Opsiyonel) Ana akış öncesi/sonrası karşılaştırma (Reel postları gizlenmiş)
 
-Görsel çekimi ve mağazaya yükleme **kullanıcı aksiyonudur** (Kural 34).
+**Pakete dahil değildir:** `screenshots/` klasörü repo'da tutulur ama
+extension paketine (dist/staging/) kopyalanmaz; sadece mağaza submission'da
+manuel yüklenir.
+
+Mağazaya yükleme **kullanıcı aksiyonudur** (Kural 34).
 
 ---
 
