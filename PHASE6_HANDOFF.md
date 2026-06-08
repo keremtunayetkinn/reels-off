@@ -25,7 +25,7 @@
 | Proje adı       | **Reels Off** (TR ve EN aynı)                                                                                                      |
 | Tür             | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                            |
 | Tek amaç        | Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Tercihler yalnızca cihazda. |
-| Sahibi          | Kerem Tuna                                                                                              |
+| Sahibi          | Kerem Tuna                                                                                                                         |
 | Telif yılı      | 2026                                                                                                                                |
 | Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                           |
 | Diller          | Türkçe (varsayılan), İngilizce (fallback)                                                                                           |
@@ -561,11 +561,10 @@ Public yapma günü için ek temizlik checklist'i:
       e-postası `git filter-branch --env-filter` ile `ktyetkinwork@gmail.com`'a
       yeniden yazıldı; private repo iken force-push edildi. Public yüzeylerde
       kişisel hotmail görünmüyor.
-- [ ] **"Kerem Tuna" ifadesi:** Tüm PHASE1-6
-      GUIDE/HANDOFF dosyalarında geçiyor. Public repo'da bu bilgi (ad +
-      üniversite + bölüm) herkes görür. İki seçenek:
-      (i) Kalsın (eğitim arka planı açıklayıcı), (ii) "Kerem Tuna" yeterli,
-      üniversite kısmını sil.
+- [x] **Eğitim/üniversite bilgisi:** Tamamlandı. Tüm PHASE GUIDE/HANDOFF
+      dosyalarındaki "Sahibi" satırlarından üniversite + bölüm ifadesi
+      kaldırıldı; sadece "Kerem Tuna" bırakıldı. Dekoratif metadata olduğu için
+      dosyaların işlevi korundu, hiçbir teknik içerik etkilenmedi.
 - [ ] **"Kopya" yedek dosyaları:** 8 dosya kökte (`PHASE1_GUIDE - Kopya.md`,
       `manifest - Kopya.json`, `LICENSE - Kopya`, `.eslintrc - Kopya.json`,
       `.prettierrc - Kopya.json`, `PRIVACY-{TR,EN} - Kopya.md`,

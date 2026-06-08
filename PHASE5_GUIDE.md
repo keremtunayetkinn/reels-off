@@ -43,7 +43,7 @@ Bu projenin commit geçmişinde **kanıtlanmış tutarsızlıklar** vardır:
 | Proje adı       | **Reels Off** (TR ve EN aynı)                                                                                                                 |
 | Tür             | Chrome + Firefox MV3 tarayıcı eklentisi                                                                                                       |
 | Tek amaç        | "Instagram web arayüzünde Reels ve algoritmik içerik önerilerini gizleyerek dikkat dağılmasını azaltır. Tercihler yalnızca cihazda saklanır." |
-| Sahibi          | Kerem Tuna                                                                                                         |
+| Sahibi          | Kerem Tuna                                                                                                                                    |
 | Hedef mağazalar | Chrome Web Store + Mozilla Add-ons (AMO)                                                                                                      |
 | Diller          | Türkçe (varsayılan), İngilizce (fallback)                                                                                                     |
 | Mevcut faz      | **Faz 4 tamamlandı**; bu belge **Faz 5'i (Cilalama)** tanımlar                                                                                |
